@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Star, Filter, Grid, List, SlidersHorizontal, ShoppingCart, Heart } from 'lucide-react';
+import { Star, Filter, Grid, List, SlidersHorizontal, ShoppingCart, Heart, Search } from 'lucide-react';
 
 const ShopPage = () => {
   const [products, setProducts] = useState([]);
@@ -16,6 +16,7 @@ const ShopPage = () => {
     usage: searchParams.get('usage') || ''
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchProducts();
@@ -23,7 +24,7 @@ const ShopPage = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [products, filters, sortBy]);
+  }, [products, filters, sortBy, searchQuery]);
 
   const fetchProducts = async () => {
     try {
@@ -41,6 +42,15 @@ const ShopPage = () => {
 
   const applyFilters = () => {
     let filtered = [...products];
+
+    // Apply search
+    if (searchQuery) {
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
 
     // Apply filters
     if (filters.ram) {
@@ -231,12 +241,26 @@ const ShopPage = () => {
 
           {/* Main Content */}
           <div className="flex-1">
+            {/* Search Bar */}
+            <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amazon-blue focus:border-transparent"
+                />
+              </div>
+            </div>
+
             {/* Header */}
             <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">
-                    {filters.usage ? `${filters.usage} Laptops` : 'All Laptops'}
+                    {filters.usage ? `${filters.usage} Laptops` : 'Smart Accessories'}
                   </h1>
                   <p className="text-gray-600 mt-1">
                     {filteredProducts.length} products found
