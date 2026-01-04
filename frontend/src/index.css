@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Amazon Ember', 'Helvetica Neue', Arial, sans-serif;
+  background-color: #ffffff;
+  color: #0f1111;
+  line-height: 1.4;
+}
+
+#root {
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Button styles */
+.btn-primary {
+  background: linear-gradient(to bottom, #f7dfa5 0%, #f0c14b 100%);
+  border: 1px solid #a88734;
+  border-radius: 3px;
+  color: #111;
+  font-weight: 400;
+  padding: 8px 16px;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(to bottom, #f5d78e 0%, #eeb933 100%);
+  border-color: #9c7e31;
+}
+
+.btn-secondary {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  color: #111;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.btn-secondary:hover {
+  background: #f7f7f7;
+  border-color: #999;
+}
+
+/* Card styles */
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Text styles */
+.text-amazon-orange {
+  color: #c7511f;
+}
+
+.text-amazon-blue {
+  color: #007185;
+}
