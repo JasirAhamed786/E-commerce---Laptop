@@ -56,7 +56,7 @@ const ProductDetails = () => {
     );
   }
 
-  const images = [product.imageURL || '/placeholder.jpg']; // Add more images if available
+  const images = [product.image || '/placeholder.jpg']; // Add more images if available
 
   return (
     <div className="min-h-screen bg-gray-50">

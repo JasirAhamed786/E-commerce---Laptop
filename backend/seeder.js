@@ -14,44 +14,44 @@ const nameSuffixes = ['X', 'Y', 'Z', 'Pro', 'Ultra', 'Max', 'Air', 'Book', 'Pad'
 const getImageUrl = (category) => {
   const imageUrls = {
     'Laptop': [
-      'https://via.placeholder.com/500x300/4a90e2/ffffff?text=Laptop',
-      'https://via.placeholder.com/500x300/50e3c2/ffffff?text=Laptop',
-      'https://via.placeholder.com/500x300/f5a623/ffffff?text=Laptop',
-      'https://via.placeholder.com/500x300/d0021b/ffffff?text=Laptop',
-      'https://via.placeholder.com/500x300/9013fe/ffffff?text=Laptop',
-      'https://via.placeholder.com/500x300/7ed321/ffffff?text=Laptop',
-      'https://via.placeholder.com/500x300/b8e986/ffffff?text=Laptop',
-      'https://via.placeholder.com/500x300/417505/ffffff?text=Laptop'
+      'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500',
+      'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=500',
+      'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=500',
+      'https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=500',
+      'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=500',
+      'https://images.unsplash.com/photo-1587614295999-6c1f4c4b98ea?w=500',
+      'https://images.unsplash.com/photo-1542393545-10f5cde2c810?w=500',
+      'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500'
     ],
     'Mobile': [
-      'https://via.placeholder.com/500x300/e74c3c/ffffff?text=Mobile',
-      'https://via.placeholder.com/500x300/9b59b6/ffffff?text=Mobile',
-      'https://via.placeholder.com/500x300/1abc9c/ffffff?text=Mobile',
-      'https://via.placeholder.com/500x300/34495e/ffffff?text=Mobile',
-      'https://via.placeholder.com/500x300/16a085/ffffff?text=Mobile',
-      'https://via.placeholder.com/500x300/27ae60/ffffff?text=Mobile',
-      'https://via.placeholder.com/500x300/2980b9/ffffff?text=Mobile',
-      'https://via.placeholder.com/500x300/8e44ad/ffffff?text=Mobile'
+      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500',
+      'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=500',
+      'https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=500',
+      'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=500',
+      'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500',
+      'https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=500',
+      'https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=500',
+      'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=500'
     ],
     'Headphone': [
-      'https://via.placeholder.com/500x300/e67e22/ffffff?text=Headphone',
-      'https://via.placeholder.com/500x300/f39c12/ffffff?text=Headphone',
-      'https://via.placeholder.com/500x300/d35400/ffffff?text=Headphone',
-      'https://via.placeholder.com/500x300/c0392b/ffffff?text=Headphone',
-      'https://via.placeholder.com/500x300/e74c3c/ffffff?text=Headphone',
-      'https://via.placeholder.com/500x300/9b59b6/ffffff?text=Headphone',
-      'https://via.placeholder.com/500x300/1abc9c/ffffff?text=Headphone',
-      'https://via.placeholder.com/500x300/34495e/ffffff?text=Headphone'
+      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500',
+      'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=500',
+      'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=500',
+      'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500',
+      'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=500',
+      'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=500',
+      'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=500',
+      'https://images.unsplash.com/photo-1599669454699-248893623440?w=500'
     ],
     'Watch': [
-      'https://via.placeholder.com/500x300/16a085/ffffff?text=Smartwatch',
-      'https://via.placeholder.com/500x300/27ae60/ffffff?text=Smartwatch',
-      'https://via.placeholder.com/500x300/2980b9/ffffff?text=Smartwatch',
-      'https://via.placeholder.com/500x300/8e44ad/ffffff?text=Smartwatch',
-      'https://via.placeholder.com/500x300/e67e22/ffffff?text=Smartwatch',
-      'https://via.placeholder.com/500x300/f39c12/ffffff?text=Smartwatch',
-      'https://via.placeholder.com/500x300/d35400/ffffff?text=Smartwatch',
-      'https://via.placeholder.com/500x300/c0392b/ffffff?text=Smartwatch'
+     'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500',
+      'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500',
+      'https://images.unsplash.com/photo-1585790050230-5dd28404ccb9?w=500',
+      'https://images.unsplash.com/photo-1561154464-7a27d24a4421?w=500',
+      'https://images.unsplash.com/photo-1584006682522-dc17d6c0d9ac?w=500',
+      'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500',
+      'https://images.unsplash.com/photo-1585790050230-5dd28404ccb9?w=500',
+      'https://images.unsplash.com/photo-1561154464-7a27d24a4421?w=500'
     ]
   };
   const categoryImages = imageUrls[category] || imageUrls['Watch'];
