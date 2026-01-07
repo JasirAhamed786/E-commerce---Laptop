@@ -14,6 +14,13 @@ const ProductDetails = () => {
     fetchProduct();
   }, [id]);
 
+  // Scroll to top only when product data is loaded
+  useEffect(() => {
+    if (product) {
+      window.scrollTo(0, 0);
+    }
+  }, [product]);
+
   const fetchProduct = async () => {
     try {
       const response = await fetch(`http://localhost:5000/api/products/${id}`);

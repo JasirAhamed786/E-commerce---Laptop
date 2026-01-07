@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Search, ShoppingCart, User, Store, Menu, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import logo from '../../Lap logo 2.png';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -19,9 +20,12 @@ const Navbar = () => {
       <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
 
         {/* 1. Logo (Orange Accent) */}
-        <Link to="/" className="flex flex-col leading-none group">
-          <span className="text-xl font-bold italic text-orange-600 tracking-tighter group-hover:text-orange-700 transition">DormDeals</span>
-          <span className="text-[10px] text-slate-500 font-medium">Student Marketplace</span>
+        <Link to="/" className="flex items-center gap-2 leading-none group">
+          <img src={logo} alt="DormDeals Logo" className="h-8 w-8" />
+          <div className="flex flex-col">
+            <span className="text-xl font-bold italic text-orange-600 tracking-tighter group-hover:text-orange-700 transition">DormDeals</span>
+            <span className="text-[10px] text-slate-500 font-medium">Student Marketplace</span>
+          </div>
         </Link>
 
         {/* 2. Search Bar (Light Grey Background) */}
