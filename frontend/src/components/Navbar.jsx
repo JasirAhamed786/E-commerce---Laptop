@@ -19,12 +19,9 @@ const Navbar = () => {
       <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
 
         {/* 1. Logo (Orange Accent) */}
-        <Link to="/" className="flex items-center gap-2 leading-none group">
-          <img src="/Lap logo 2.png" alt="DormDeals Logo" className="h-8 w-8" />
-          <div className="flex flex-col">
-            <span className="text-xl font-bold italic text-orange-600 tracking-tighter group-hover:text-orange-700 transition">DormDeals</span>
-            <span className="text-[10px] text-slate-500 font-medium">Student Marketplace</span>
-          </div>
+        <Link to="/" className="flex flex-col leading-none group">
+          <span className="text-xl font-bold italic text-orange-600 tracking-tighter group-hover:text-orange-700 transition">DormDeals</span>
+          <span className="text-[10px] text-slate-500 font-medium">Student Marketplace</span>
         </Link>
 
         {/* 2. Search Bar (Light Grey Background) */}
