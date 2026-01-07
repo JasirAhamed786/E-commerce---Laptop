@@ -11,7 +11,6 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     fetchProduct();
   }, [id]);
 
@@ -57,7 +56,7 @@ const ProductDetails = () => {
     );
   }
 
-  const images = [product.image || product.imageURL || '/placeholder.jpg']; // Add more images if available
+  const images = [product.imageURL || '/placeholder.jpg']; // Add more images if available
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -82,11 +81,6 @@ const ProductDetails = () => {
               <img
                 src={images[selectedImage]}
                 alt={product.name}
-                referrerPolicy="no-referrer"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "https://via.placeholder.com/400?text=No+Image";
-                }}
                 className="w-full h-96 object-cover rounded-lg"
               />
             </div>
