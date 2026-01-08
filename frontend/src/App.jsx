@@ -11,6 +11,8 @@ import ShippingPage from './pages/ShippingPage';
 import PaymentPage from './pages/PaymentPage';
 import SuccessPage from './pages/SuccessPage';
 import Profile from './components/Profile';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -28,6 +30,9 @@ function App() {
         <Route path="/payment" element={<ProtectedRoute><PaymentPage /></ProtectedRoute>} />
         <Route path="/success" element={<ProtectedRoute><SuccessPage /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/shipping-info" element={<ShippingPage />} />
       </Routes>
       <Chatbot />
     </div>

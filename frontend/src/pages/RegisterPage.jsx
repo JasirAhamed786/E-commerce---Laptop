@@ -28,25 +28,48 @@ const AuthPage = () => {
   }, [isLogin]);
 
   const validateForm = () => {
+    // Email validation
     if (!email.trim()) {
       setError('Email is required');
       return false;
     }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address');
+      return false;
+    }
+
+    // Password validation
     if (!password.trim()) {
       setError('Password is required');
       return false;
     }
+
     if (!isLogin) {
+      // Name validation
       if (!name.trim()) {
         setError('Full name is required');
         return false;
       }
+      if (name.trim().length < 2) {
+        setError('Full name must be at least 2 characters long');
+        return false;
+      }
+
+      // Confirm password validation
       if (password !== confirmPassword) {
         setError('Passwords do not match');
         return false;
       }
+
+      // Password strength validation
       if (password.length < 6) {
         setError('Password must be at least 6 characters long');
+        return false;
+      }
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
+      if (!passwordRegex.test(password)) {
+        setError('Password must contain at least one uppercase letter, one lowercase letter, and one number');
         return false;
       }
     }

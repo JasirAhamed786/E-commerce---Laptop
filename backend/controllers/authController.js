@@ -63,6 +63,11 @@ const loginUser = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        phone: user.phone,
+        dateOfBirth: user.dateOfBirth,
+        gender: user.gender,
+        address: user.address,
+        preferences: user.preferences,
         token: generateToken(user._id),
       });
     } else {
@@ -85,6 +90,11 @@ const getUserProfile = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        phone: user.phone,
+        dateOfBirth: user.dateOfBirth,
+        gender: user.gender,
+        address: user.address,
+        preferences: user.preferences,
       });
     } else {
       res.status(404).json({ message: 'User not found' });
@@ -103,17 +113,43 @@ const updateUserProfile = async (req, res) => {
     if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
+      user.phone = req.body.phone !== undefined ? req.body.phone : user.phone;
+      if (req.body.dateOfBirth !== undefined && req.body.dateOfBirth !== '') {
+        user.dateOfBirth = new Date(req.body.dateOfBirth);
+      } else if (req.body.dateOfBirth === '') {
+        user.dateOfBirth = undefined;
+      }
+      user.gender = req.body.gender || user.gender;
+      if (req.body.address) {
+        user.address = user.address || {};
+        user.address.street = req.body.address.street !== undefined && req.body.address.street !== '' ? req.body.address.street : (req.body.address.street === '' ? undefined : user.address.street);
+        user.address.city = req.body.address.city !== undefined && req.body.address.city !== '' ? req.body.address.city : (req.body.address.city === '' ? undefined : user.address.city);
+        user.address.state = req.body.address.state !== undefined && req.body.address.state !== '' ? req.body.address.state : (req.body.address.state === '' ? undefined : user.address.state);
+        user.address.zipCode = req.body.address.zipCode !== undefined && req.body.address.zipCode !== '' ? req.body.address.zipCode : (req.body.address.zipCode === '' ? undefined : user.address.zipCode);
+        user.address.country = req.body.address.country !== undefined && req.body.address.country !== '' ? req.body.address.country : (req.body.address.country === '' ? undefined : user.address.country);
+      }
+      if (req.body.preferences) {
+        user.preferences = user.preferences || {};
+        user.preferences.newsletter = req.body.preferences.newsletter !== undefined ? req.body.preferences.newsletter : user.preferences.newsletter;
+        user.preferences.notifications = req.body.preferences.notifications !== undefined ? req.body.preferences.notifications : user.preferences.notifications;
+      }
 
       const updatedUser = await user.save();
       res.json({
         _id: updatedUser._id,
         name: updatedUser.name,
         email: updatedUser.email,
+        phone: updatedUser.phone,
+        dateOfBirth: updatedUser.dateOfBirth,
+        gender: updatedUser.gender,
+        address: updatedUser.address,
+        preferences: updatedUser.preferences,
       });
     } else {
       res.status(404).json({ message: 'User not found' });
     }
   } catch (error) {
+    console.error('Update profile error:', error);
     res.status(500).json({ message: error.message });
   }
 };

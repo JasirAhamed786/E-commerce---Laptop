@@ -1,7 +1,8 @@
-- [x] Remove Search import from Navbar.jsx
-- [x] Remove the search bar div from Navbar.jsx
-- [x] Add search state to ShopPage.jsx
-- [x] Add search input to ShopPage header
-- [x] Modify applyFilters to include search filtering
-- [x] Add profile icon to home page that opens a modal with user profile information
-- [x] Add profile icon to home page that opens a modal with user profile information
+# TODO List
+
+## Profile Update Fix
+- [x] Identify issue: Profile edits not saving to UI and database
+- [x] Analyze backend updateUserProfile function
+- [x] Fix backend to handle empty strings for optional fields (phone)
+- [x] Update frontend to send empty strings instead of undefined for optional fields
+- [x] Test the fix (pending user verification)

@@ -64,7 +64,16 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        const userData = { _id: data._id, name: data.name, email: data.email };
+        const userData = {
+          _id: data._id,
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          dateOfBirth: data.dateOfBirth,
+          gender: data.gender,
+          address: data.address,
+          preferences: data.preferences,
+        };
         localStorage.setItem('user', JSON.stringify(userData));
         setUser(userData);
         return { success: true, user: userData };
@@ -88,7 +97,16 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        const userData = { _id: data._id, name: data.name, email: data.email };
+        const userData = {
+          _id: data._id,
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          dateOfBirth: data.dateOfBirth,
+          gender: data.gender,
+          address: data.address,
+          preferences: data.preferences,
+        };
         localStorage.setItem('user', JSON.stringify(userData));
         setUser(userData);
         return { success: true };

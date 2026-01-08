@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Lottie from 'lottie-react';
-import { User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import Profile from './Profile';
 
 const Home = () => {
   const [animationData, setAnimationData] = useState(null);
-  const [showProfile, setShowProfile] = useState(false);
-  const { user } = useAuth();
 
   useEffect(() => {
     // --- UPDATED ANIMATION: "Tech & Laptop Shopping" ---
@@ -31,18 +27,7 @@ const Home = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Banner */}
       <div className="bg-gradient-to-br from-gray-900 via-slate-800 to-black py-20 relative overflow-hidden">
-        {/* Profile Icon */}
-        {user && (
-          <div className="absolute top-4 right-4 z-20">
-            <button
-              onClick={() => setShowProfile(!showProfile)}
-              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg backdrop-blur-sm transition-colors"
-            >
-              <User className="w-5 h-5" />
-              <span className="hidden md:block">Profile</span>
-            </button>
-          </div>
-        )}
+
         {/* Abstract Background Element */}
         <div className="absolute top-0 right-0 w-1/2 h-full bg-orange-500/5 skew-x-12 transform origin-top-right"></div>
         
@@ -115,14 +100,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Profile Modal */}
-      {showProfile && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <Profile onClose={() => setShowProfile(false)} />
-          </div>
-        </div>
-      )}
+
 
       {/* Categories & Products Sections */}
       <div className="bg-white py-16">
@@ -259,8 +237,8 @@ const Home = () => {
             <div className="space-y-4">
               <h4 className="text-lg font-semibold">Customer Service</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="text-gray-300 hover:text-orange-500 transition-colors">Contact Us</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-orange-500 transition-colors">Shipping Info</a></li>
+                <li><Link to="/contact" className="text-gray-300 hover:text-orange-500 transition-colors">Contact Us</Link></li>
+                <li><Link to="/shipping-info" className="text-gray-300 hover:text-orange-500 transition-colors">Shipping Info</Link></li>
                 <li><a href="#" className="text-gray-300 hover:text-orange-500 transition-colors">Returns & Exchanges</a></li>
                 <li><a href="#" className="text-gray-300 hover:text-orange-500 transition-colors">Warranty</a></li>
                 <li><a href="#" className="text-gray-300 hover:text-orange-500 transition-colors">FAQ</a></li>
