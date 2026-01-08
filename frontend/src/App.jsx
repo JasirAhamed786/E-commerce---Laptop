@@ -10,6 +10,7 @@ import CartPage from './pages/CartPage';
 import ShippingPage from './pages/ShippingPage';
 import PaymentPage from './pages/PaymentPage';
 import SuccessPage from './pages/SuccessPage';
+import Profile from './components/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -18,14 +19,15 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/shop" element={<ShopPage />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/shop" element={<ProtectedRoute><ShopPage /></ProtectedRoute>} />
+        <Route path="/product/:id" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>} />
         <Route path="/login" element={<RegisterPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
         <Route path="/shipping" element={<ProtectedRoute><ShippingPage /></ProtectedRoute>} />
         <Route path="/payment" element={<ProtectedRoute><PaymentPage /></ProtectedRoute>} />
         <Route path="/success" element={<ProtectedRoute><SuccessPage /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
       </Routes>
       <Chatbot />
     </div>

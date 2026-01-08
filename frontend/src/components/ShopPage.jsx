@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Star, Filter, Grid, List, SlidersHorizontal, ShoppingCart, Heart } from 'lucide-react';
+import { Star, Filter, Grid, List, SlidersHorizontal, ShoppingCart, Heart, Search } from 'lucide-react';
 
 const ShopPage = () => {
   const [products, setProducts] = useState([]);
@@ -16,6 +16,7 @@ const ShopPage = () => {
     usage: searchParams.get('usage') || ''
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchProducts();
@@ -23,7 +24,7 @@ const ShopPage = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [products, filters, sortBy]);
+  }, [products, filters, sortBy, searchTerm]);
 
   const fetchProducts = async () => {
     try {
@@ -41,6 +42,15 @@ const ShopPage = () => {
 
   const applyFilters = () => {
     let filtered = [...products];
+
+    // Apply search
+    if (searchTerm) {
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    }
 
     // Apply filters
     if (filters.ram) {
@@ -92,6 +102,7 @@ const ShopPage = () => {
       priceRange: '',
       usage: ''
     });
+    setSearchTerm('');
   };
 
   if (loading) {
@@ -244,6 +255,20 @@ const ShopPage = () => {
                 </div>
 
                 <div className="flex items-center gap-4">
+                  {/* Search */}
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                      <Search className="h-4 w-4 text-gray-400" />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Search products..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="border border-gray-300 rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-amazon-blue focus:border-transparent w-80"
+                    />
+                  </div>
+
                   {/* Sort */}
                   <select
                     value={sortBy}

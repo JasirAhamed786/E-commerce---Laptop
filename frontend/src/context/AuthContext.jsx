@@ -17,8 +17,11 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Check if user is logged in on app start
     const token = localStorage.getItem('token');
-    if (token) {
-      // Verify token with backend
+    const storedUser = localStorage.getItem('user');
+    if (token && storedUser) {
+      // Immediately set user from localStorage
+      setUser(JSON.parse(storedUser));
+      // Verify token with backend in background
       fetch('http://localhost:5000/api/auth/profile', {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -27,11 +30,21 @@ export const AuthProvider = ({ children }) => {
         .then((res) => res.json())
         .then((data) => {
           if (data._id) {
+            // Update user data if verification succeeds
             setUser(data);
+            localStorage.setItem('user', JSON.stringify(data));
+          } else {
+            // If verification fails, logout
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            setUser(null);
           }
         })
         .catch(() => {
+          // If fetch fails, logout
           localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setUser(null);
         })
         .finally(() => setLoading(false));
     } else {
@@ -51,8 +64,10 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        setUser(data.user);
-        return { success: true, user: data.user };
+        const userData = { _id: data._id, name: data.name, email: data.email };
+        localStorage.setItem('user', JSON.stringify(userData));
+        setUser(userData);
+        return { success: true, user: userData };
       } else {
         return { success: false, message: data.message || 'Invalid credentials' };
       }
@@ -73,7 +88,9 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        setUser(data.user);
+        const userData = { _id: data._id, name: data.name, email: data.email };
+        localStorage.setItem('user', JSON.stringify(userData));
+        setUser(userData);
         return { success: true };
       } else {
         return { success: false, message: data.message };
@@ -88,11 +105,36 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const updateUser = async (userData) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/auth/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(userData),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setUser(data);
+        localStorage.setItem('user', JSON.stringify(data));
+        return { success: true };
+      } else {
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      return { success: false, message: 'Network error' };
+    }
+  };
+
   const value = {
     user,
     login,
     register,
     logout,
+    updateUser,
     loading,
   };
 
