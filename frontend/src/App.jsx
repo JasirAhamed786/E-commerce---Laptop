@@ -13,11 +13,16 @@ import SuccessPage from './pages/SuccessPage';
 import Profile from './components/Profile';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import ReturnsExchangesPage from './pages/ReturnsExchangesPage';
+import WarrantyPage from './pages/WarrantyPage';
+import FAQPage from './pages/FAQPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
+      <ScrollToTop />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -32,6 +37,9 @@ function App() {
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/returns-exchanges" element={<ReturnsExchangesPage />} />
+        <Route path="/warranty" element={<WarrantyPage />} />
+        <Route path="/faq" element={<FAQPage />} />
         <Route path="/shipping-info" element={<ShippingPage />} />
       </Routes>
       <Chatbot />

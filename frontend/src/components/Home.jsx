@@ -5,6 +5,37 @@ import { useAuth } from '../context/AuthContext';
 
 const Home = () => {
   const [animationData, setAnimationData] = useState(null);
+  const [email, setEmail] = useState('');
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      // Simulate API call - replace with actual API endpoint
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // For demo purposes, we'll just show success
+      setIsSubscribed(true);
+      setEmail('');
+    } catch (err) {
+      setError('Failed to subscribe. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     // --- UPDATED ANIMATION: "Tech & Laptop Shopping" ---
@@ -239,9 +270,9 @@ const Home = () => {
               <ul className="space-y-2">
                 <li><Link to="/contact" className="text-gray-300 hover:text-orange-500 transition-colors">Contact Us</Link></li>
                 <li><Link to="/shipping-info" className="text-gray-300 hover:text-orange-500 transition-colors">Shipping Info</Link></li>
-                <li><a href="#" className="text-gray-300 hover:text-orange-500 transition-colors">Returns & Exchanges</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-orange-500 transition-colors">Warranty</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-orange-500 transition-colors">FAQ</a></li>
+                <li><Link to="/returns-exchanges" className="text-gray-300 hover:text-orange-500 transition-colors">Returns & Exchanges</Link></li>
+                <li><Link to="/warranty" className="text-gray-300 hover:text-orange-500 transition-colors">Warranty</Link></li>
+                <li><Link to="/faq" className="text-gray-300 hover:text-orange-500 transition-colors">FAQ</Link></li>
               </ul>
             </div>
 
@@ -249,19 +280,59 @@ const Home = () => {
             <div className="space-y-4">
               <h4 className="text-lg font-semibold">Stay Updated</h4>
               <p className="text-gray-300 text-sm">Get the latest deals and tech updates</p>
-              <div className="flex">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-l-lg text-white placeholder-gray-400 focus:outline-none focus:border-orange-500"
-                />
-                <button className="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-r-lg transition-colors">
-                  Subscribe
-                </button>
-              </div>
-              <p className="text-xs text-gray-400">
-                By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.
-              </p>
+
+              {isSubscribed ? (
+                <div className="bg-green-600/20 border border-green-500/30 rounded-lg p-4">
+                  <div className="flex items-center space-x-2">
+                    <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-green-400 font-medium">Successfully subscribed!</span>
+                  </div>
+                  <p className="text-green-300 text-sm mt-1">Thank you for subscribing. You'll receive our latest updates soon.</p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubscribe} className="space-y-3">
+                  <div className="flex">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Enter your email"
+                      className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-l-lg text-white placeholder-gray-400 focus:outline-none focus:border-orange-500 transition-colors"
+                      disabled={isLoading}
+                      required
+                    />
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="px-6 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-500 disabled:cursor-not-allowed text-white rounded-r-lg transition-colors flex items-center justify-center min-w-[100px]"
+                    >
+                      {isLoading ? (
+                        <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      ) : (
+                        'Subscribe'
+                      )}
+                    </button>
+                  </div>
+
+                  {error && (
+                    <p className="text-red-400 text-sm flex items-center space-x-1">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                      <span>{error}</span>
+                    </p>
+                  )}
+
+                  <p className="text-xs text-gray-400">
+                    By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.
+                  </p>
+                </form>
+              )}
             </div>
           </div>
 
@@ -283,6 +354,8 @@ const Home = () => {
     </div>
   );
 };
+
+export default Home;
 
 // Internal ProductCard Component
 const ProductCard = ({ image, name, price, originalPrice, discount }) => (
@@ -319,5 +392,3 @@ const ProductCard = ({ image, name, price, originalPrice, discount }) => (
     </div>
   </div>
 );
-
-export default Home;

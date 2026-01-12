@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, User, Store, Menu, LogOut } from 'lucide-react';
+import { ShoppingCart, User, Store, Menu, LogOut, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import logo from '../../Lap logo 2.png';
@@ -8,12 +8,17 @@ import logo from '../../Lap logo 2.png';
 const Navbar = () => {
   const { user, logout } = useAuth();
   const { cartItems } = useCart();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
   };
 
   const cartItemCount = cartItems.reduce((total, item) => total + item.qty, 0);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   return (
     <nav className="bg-white text-slate-800 sticky top-0 z-50 shadow-sm border-b border-gray-100 animate-fade-in">
@@ -74,9 +79,65 @@ const Navbar = () => {
             <span className="hidden lg:block">Sell Item</span>
           </div>
 
-          <Menu className="w-6 h-6 md:hidden text-slate-600 hover:text-orange-600 transition cursor-pointer p-1 rounded hover:bg-orange-50" />
+          <button onClick={toggleMobileMenu} className="md:hidden">
+            <Menu className="w-6 h-6 text-slate-600 hover:text-orange-600 transition cursor-pointer p-1 rounded hover:bg-orange-50" />
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu - Slides from Bottom */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black bg-opacity-50"
+            onClick={toggleMobileMenu}
+          ></div>
+
+          {/* Menu Panel */}
+          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl transform transition-transform duration-300 ease-out">
+            <div className="px-6 py-8 space-y-6 max-h-96 overflow-y-auto">
+              {/* Handle */}
+              <div className="flex justify-center">
+                <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
+              </div>
+
+              {/* Quick Links */}
+              <div>
+                <h4 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h4>
+                <ul className="space-y-3">
+                  <li><Link to="/shop" onClick={toggleMobileMenu} className="block text-gray-700 hover:text-orange-600 transition-colors py-2">Shop All</Link></li>
+                  <li><Link to="/shop?category=laptop" onClick={toggleMobileMenu} className="block text-gray-700 hover:text-orange-600 transition-colors py-2">Laptops</Link></li>
+                  <li><Link to="/shop?category=mobile" onClick={toggleMobileMenu} className="block text-gray-700 hover:text-orange-600 transition-colors py-2">Mobiles</Link></li>
+                  <li><Link to="/shop?category=accessories" onClick={toggleMobileMenu} className="block text-gray-700 hover:text-orange-600 transition-colors py-2">Accessories</Link></li>
+                  <li><Link to="/about" onClick={toggleMobileMenu} className="block text-gray-700 hover:text-orange-600 transition-colors py-2">About Us</Link></li>
+                </ul>
+              </div>
+
+              {/* Customer Service */}
+              <div>
+                <h4 className="text-lg font-semibold text-gray-900 mb-4">Customer Service</h4>
+                <ul className="space-y-3">
+                  <li><Link to="/contact" onClick={toggleMobileMenu} className="block text-gray-700 hover:text-orange-600 transition-colors py-2">Contact Us</Link></li>
+                  <li><Link to="/shipping-info" onClick={toggleMobileMenu} className="block text-gray-700 hover:text-orange-600 transition-colors py-2">Shipping Info</Link></li>
+                  <li><a href="#" onClick={toggleMobileMenu} className="block text-gray-700 hover:text-orange-600 transition-colors py-2">Returns & Exchanges</a></li>
+                  <li><a href="#" onClick={toggleMobileMenu} className="block text-gray-700 hover:text-orange-600 transition-colors py-2">Warranty</a></li>
+                  <li><a href="#" onClick={toggleMobileMenu} className="block text-gray-700 hover:text-orange-600 transition-colors py-2">FAQ</a></li>
+                </ul>
+              </div>
+
+              {/* Close Button */}
+              <button
+                onClick={toggleMobileMenu}
+                className="w-full bg-orange-600 text-white py-3 rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center gap-2 font-medium"
+              >
+                <X className="w-4 h-4" />
+                Close Menu
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
