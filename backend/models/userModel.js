@@ -38,6 +38,10 @@ const userSchema = mongoose.Schema(
       newsletter: { type: Boolean, default: true },
       notifications: { type: Boolean, default: true },
     },
+    profilePicture: {
+      type: String,
+      default: "",
+    },
     isAdmin: {
       type: Boolean,
       required: true,

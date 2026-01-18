@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "lottie-react": "^2.4.1"
   }
 }

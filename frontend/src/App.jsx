@@ -16,6 +16,9 @@ import ContactPage from './pages/ContactPage';
 import ReturnsExchangesPage from './pages/ReturnsExchangesPage';
 import WarrantyPage from './pages/WarrantyPage';
 import FAQPage from './pages/FAQPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsOfServicePage from './pages/TermsOfServicePage';
+import CookiePolicyPage from './pages/CookiePolicyPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 
@@ -40,6 +43,9 @@ function App() {
         <Route path="/returns-exchanges" element={<ReturnsExchangesPage />} />
         <Route path="/warranty" element={<WarrantyPage />} />
         <Route path="/faq" element={<FAQPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+        <Route path="/cookie-policy" element={<CookiePolicyPage />} />
         <Route path="/shipping-info" element={<ShippingPage />} />
       </Routes>
       <Chatbot />

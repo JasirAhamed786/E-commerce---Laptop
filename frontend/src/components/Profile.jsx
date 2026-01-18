@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { Camera } from 'lucide-react';
 
 const Profile = () => {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, setUser } = useAuth();
   const [activeTab, setActiveTab] = useState('personal');
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -188,6 +190,43 @@ const Profile = () => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
 
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('profilePicture', file);
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/upload', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        // Update user context with new profile picture
+        const updatedUser = { ...user, profilePicture: data.filePath };
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        setMessage('Profile picture updated successfully!');
+      } else {
+        setMessage(data.message || 'Failed to upload image');
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      setMessage('An error occurred while uploading the image');
+    }
+  };
+
+  const handleAvatarClick = () => {
+    fileInputRef.current.click();
+  };
+
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -205,8 +244,31 @@ const Profile = () => {
       <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="flex items-center space-x-4">
-            <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-2xl font-bold">
-              {getInitials(user.name)}
+            <div className="relative">
+              <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-2xl font-bold overflow-hidden">
+                {user.profilePicture ? (
+                  <img
+                    src={`http://localhost:5000${user.profilePicture}`}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  getInitials(user.name)
+                )}
+              </div>
+              <button
+                onClick={handleAvatarClick}
+                className="absolute bottom-0 right-0 bg-orange-600 text-white p-2 rounded-full hover:bg-orange-700 transition-colors"
+              >
+                <Camera className="w-4 h-4" />
+              </button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="image/*"
+                className="hidden"
+              />
             </div>
             <div>
               <h1 className="text-3xl font-bold">{user.name}</h1>

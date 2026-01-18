@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, User, Store, Menu, LogOut, X } from 'lucide-react';
+import { ShoppingCart, User, Menu, LogOut, X, UserCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import logo from '../../Lap logo 2.png';
@@ -9,6 +9,8 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const { cartItems } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const handleLogout = () => {
     logout();
@@ -20,9 +22,27 @@ const Navbar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <nav className="bg-white text-slate-800 sticky top-0 z-50 shadow-sm border-b border-gray-100 animate-fade-in">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <div className="pl-4 pr-0 py-3 flex items-center justify-between gap-4">
 
         {/* 1. Logo (Orange Accent) */}
         <Link to="/" className="flex items-start leading-none group">
@@ -38,32 +58,6 @@ const Navbar = () => {
         {/* 3. Right Icons (Dark Grey with Orange Hover) */}
         <div className="flex items-center gap-4 font-medium text-sm text-slate-600">
 
-          {/* User Authentication Section */}
-          {user ? (
-            <div className="flex items-center gap-4">
-              <Link to="/profile" className="flex items-center gap-2 text-slate-700 hover:text-orange-600 transition-colors px-3 py-2 rounded-lg hover:bg-orange-50">
-                <User className="w-5 h-5" />
-                <span className="hidden lg:block font-medium">{user.name}</span>
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 hover:text-orange-600 transition-colors px-3 py-2 rounded-lg hover:bg-orange-50"
-                aria-label="Logout"
-              >
-                <LogOut className="w-4 h-4" />
-                <span className="hidden lg:block">Logout</span>
-              </button>
-            </div>
-          ) : (
-            <Link
-              to="/login"
-              className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors flex items-center gap-2 font-medium shadow-sm"
-            >
-              <User className="w-4 h-4" />
-              <span>Login</span>
-            </Link>
-          )}
-
           <Link to="/cart" className="flex items-center gap-2 hover:text-orange-600 transition p-2 rounded-lg hover:bg-orange-50 relative">
             <ShoppingCart className="w-5 h-5" />
             <span className="hidden lg:block">Cart</span>
@@ -74,10 +68,73 @@ const Navbar = () => {
             )}
           </Link>
 
-          <div className="flex items-center gap-2 hover:text-orange-600 transition p-2 rounded-lg hover:bg-orange-50 cursor-pointer">
-            <Store className="w-5 h-5" />
-            <span className="hidden lg:block">Sell Item</span>
-          </div>
+          {/* User Authentication Section */}
+          {user ? (
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={toggleDropdown}
+                className="flex items-center gap-2 text-slate-700 hover:text-orange-600 transition-colors px-3 py-2 rounded-lg hover:bg-orange-50"
+              >
+                {user.profilePicture ? (
+                  <img
+                    src={`http://localhost:5000${user.profilePicture}`}
+                    alt="Profile"
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                ) : (
+                  <UserCircle className="w-8 h-8" />
+                )}
+              </button>
+
+              {/* Dropdown Menu */}
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-200 z-50">
+                  <div className="p-4 border-b border-gray-200">
+                    <div className="flex items-center gap-3">
+                      {user.profilePicture ? (
+                        <img
+                          src={`http://localhost:5000${user.profilePicture}`}
+                          alt="Profile"
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
+                      ) : (
+                        <UserCircle className="w-10 h-10 text-gray-400" />
+                      )}
+                      <div>
+                        <p className="font-medium text-gray-900">{user.name}</p>
+                        <p className="text-sm text-gray-500">{user.email}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="py-2">
+                    <Link
+                      to="/profile"
+                      onClick={() => setIsDropdownOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      <User className="w-4 h-4" />
+                      Profile
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center gap-3 w-full px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors flex items-center gap-2 font-medium shadow-sm"
+            >
+              <User className="w-4 h-4" />
+              <span>Login</span>
+            </Link>
+          )}
 
           <button onClick={toggleMobileMenu} className="md:hidden">
             <Menu className="w-6 h-6 text-slate-600 hover:text-orange-600 transition cursor-pointer p-1 rounded hover:bg-orange-50" />

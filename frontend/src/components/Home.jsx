@@ -343,9 +343,9 @@ const Home = () => {
                 © 2024 Campus Store. All rights reserved.
               </p>
               <div className="flex space-x-6 mt-4 md:mt-0">
-                <a href="#" className="text-gray-400 hover:text-orange-500 text-sm transition-colors">Privacy Policy</a>
-                <a href="#" className="text-gray-400 hover:text-orange-500 text-sm transition-colors">Terms of Service</a>
-                <a href="#" className="text-gray-400 hover:text-orange-500 text-sm transition-colors">Cookie Policy</a>
+                <Link to="/privacy-policy" className="text-gray-400 hover:text-orange-500 text-sm transition-colors">Privacy Policy</Link>
+                <Link to="/terms-of-service" className="text-gray-400 hover:text-orange-500 text-sm transition-colors">Terms of Service</Link>
+                <Link to="/cookie-policy" className="text-gray-400 hover:text-orange-500 text-sm transition-colors">Cookie Policy</Link>
               </div>
             </div>
           </div>

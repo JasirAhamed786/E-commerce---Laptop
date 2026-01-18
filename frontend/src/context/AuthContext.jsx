@@ -73,6 +73,7 @@ export const AuthProvider = ({ children }) => {
           gender: data.gender,
           address: data.address,
           preferences: data.preferences,
+          profilePicture: data.profilePicture,
         };
         localStorage.setItem('user', JSON.stringify(userData));
         setUser(userData);
@@ -149,6 +150,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
+    setUser,
     login,
     register,
     logout,
