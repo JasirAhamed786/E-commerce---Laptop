@@ -68,6 +68,7 @@ const loginUser = async (req, res) => {
         gender: user.gender,
         address: user.address,
         preferences: user.preferences,
+        profilePicture: user.profilePicture,
         token: generateToken(user._id),
       });
     } else {
@@ -95,6 +96,7 @@ const getUserProfile = async (req, res) => {
         gender: user.gender,
         address: user.address,
         preferences: user.preferences,
+        profilePicture: user.profilePicture,
       });
     } else {
       res.status(404).json({ message: 'User not found' });
@@ -144,6 +146,7 @@ const updateUserProfile = async (req, res) => {
         gender: updatedUser.gender,
         address: updatedUser.address,
         preferences: updatedUser.preferences,
+        profilePicture: updatedUser.profilePicture,
       });
     } else {
       res.status(404).json({ message: 'User not found' });

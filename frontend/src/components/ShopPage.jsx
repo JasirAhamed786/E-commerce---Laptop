@@ -321,11 +321,11 @@ const ShopPage = () => {
                   <Link to={`/product/${product._id}`}>
                     {/* --- THE FIX IS HERE --- */}
                     <img
-                      src={product.image || product.imageURL || 'https://via.placeholder.com/300?text=No+Image'}
+                      src={product.image}
                       alt={product.name}
-                      referrerPolicy="no-referrer" 
+                      referrerPolicy="no-referrer"
                       onError={(e) => {
-                        e.target.onerror = null; 
+                        e.target.onerror = null;
                         e.target.src = "https://via.placeholder.com/300?text=No+Image";
                       }}
                       className={`w-full object-cover rounded-lg mb-4 ${

@@ -122,7 +122,7 @@ const generateProducts = () => {
       price,
       brand,
       category,
-      imageURL: getImageUrl(category),
+      image: getImageUrl(category),
       description: getDescription(name, category, brand),
       stock: Math.floor(Math.random() * 50) + 10, // Random stock between 10-60
       specs: getSpecs(category),

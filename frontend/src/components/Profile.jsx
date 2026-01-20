@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Camera } from 'lucide-react';
+import { Camera, X } from 'lucide-react';
 
 const Profile = () => {
   const { user, updateUser, setUser } = useAuth();
@@ -8,6 +8,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -245,7 +246,7 @@ const Profile = () => {
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="flex items-center space-x-4">
             <div className="relative">
-              <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-2xl font-bold overflow-hidden">
+              <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-2xl font-bold overflow-hidden cursor-pointer" onClick={() => setShowModal(true)}>
                 {user.profilePicture ? (
                   <img
                     src={`http://localhost:5000${user.profilePicture}`}
@@ -641,6 +642,32 @@ const Profile = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal for Profile Picture */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50" onClick={() => setShowModal(false)}>
+          <div className="relative max-w-4xl max-h-full p-4">
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-2 right-2 bg-white bg-opacity-20 text-white p-2 rounded-full hover:bg-opacity-30 transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            {user.profilePicture ? (
+              <img
+                src={`http://localhost:5000${user.profilePicture}`}
+                alt="Profile"
+                className="max-w-full max-h-full object-contain"
+                onClick={(e) => e.stopPropagation()}
+              />
+            ) : (
+              <div className="w-96 h-96 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-8xl font-bold text-white">
+                {getInitials(user.name)}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
