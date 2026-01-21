@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const AuthPage = () => {
   const [name, setName] = useState('');
@@ -92,11 +93,22 @@ const AuthPage = () => {
         : await register(name, email, password);
 
       if (result.success) {
+        if (isLogin) {
+          toast.success("Welcome back! Login successful.");
+        } else {
+          toast.success("Account created! Welcome to DormDeals!");
+        }
         navigate('/');
       } else {
+        if (isLogin) {
+          toast.error(result.message || "Invalid credentials. Please try again.");
+        } else {
+          toast.error("Registration failed.");
+        }
         setError(result.message);
       }
     } catch (err) {
+      toast.error('An unexpected error occurred. Please try again.');
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);

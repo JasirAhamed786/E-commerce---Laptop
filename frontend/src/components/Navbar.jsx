@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart, User, Menu, LogOut, X, UserCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import toast from 'react-hot-toast';
 import logo from '../../Lap logo 2.png';
 
 const Navbar = () => {
@@ -14,6 +15,8 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
+    setIsDropdownOpen(false);
+    toast.success("Logged out successfully");
   };
 
   const cartItemCount = cartItems.reduce((total, item) => total + item.qty, 0);
