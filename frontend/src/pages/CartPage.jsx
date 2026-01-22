@@ -23,7 +23,7 @@ const CartPage = () => {
                 <img src={item.image} alt={item.name} className="w-20 h-20 object-cover mr-4" />
                 <div className="flex-grow">
                   <h3 className="font-semibold">{item.name}</h3>
-                  <p className="text-gray-600">${item.price}</p>
+                  <p className="text-gray-600">₹{item.price.toLocaleString()}</p>
                   <p className="text-sm">Qty: {item.qty}</p>
                 </div>
                 <button
@@ -39,15 +39,15 @@ const CartPage = () => {
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
             <div className="flex justify-between mb-2">
               <span>Subtotal:</span>
-              <span>${totalPrice.toFixed(2)}</span>
+              <span>₹{totalPrice.toLocaleString()}</span>
             </div>
             <div className="flex justify-between mb-2">
               <span>Shipping:</span>
-              <span>$10.00</span>
+              <span>₹100</span>
             </div>
             <div className="flex justify-between font-semibold text-lg border-t pt-2">
               <span>Total:</span>
-              <span>${(totalPrice + 10).toFixed(2)}</span>
+              <span>₹{(totalPrice + 100).toLocaleString()}</span>
             </div>
             <Link
               to="/payment"

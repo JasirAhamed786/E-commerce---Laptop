@@ -11,6 +11,8 @@ import CartPage from './pages/CartPage';
 import ShippingPage from './pages/ShippingPage';
 import PaymentPage from './pages/PaymentPage';
 import SuccessPage from './pages/SuccessPage';
+import OrderHistoryPage from './pages/OrderHistoryPage';
+import OrderDetailsPage from './pages/OrderDetailsPage';
 import Profile from './components/Profile';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
@@ -39,6 +41,8 @@ function App() {
         <Route path="/shipping" element={<ProtectedRoute><ShippingPage /></ProtectedRoute>} />
         <Route path="/payment" element={<ProtectedRoute><PaymentPage /></ProtectedRoute>} />
         <Route path="/success" element={<ProtectedRoute><SuccessPage /></ProtectedRoute>} />
+        <Route path="/orders" element={<ProtectedRoute><OrderHistoryPage /></ProtectedRoute>} />
+        <Route path="/orders/:id" element={<ProtectedRoute><OrderDetailsPage /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />

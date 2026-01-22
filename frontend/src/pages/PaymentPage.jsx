@@ -4,19 +4,23 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
 const PaymentPage = () => {
-  const [cardNumber, setCardNumber] = useState('');
-  const [expiry, setExpiry] = useState('');
-  const [cvv, setCvv] = useState('');
+  const [bank, setBank] = useState('');
+  const [upiId, setUpiId] = useState('');
+  const [pin, setPin] = useState('');
   const [loading, setLoading] = useState(false);
-  const { cartItems, totalPrice, clearCart } = useCart();
+  const { cartItems, totalPrice, clearCart, shippingAddress } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (pin.length !== 6) {
+      alert('PIN must be exactly 6 digits');
+      return;
+    }
     setLoading(true);
 
-    // Simulate bank processing for 2 seconds
+    // Simulate UPI processing for 2 seconds
     setTimeout(async () => {
       try {
         const orderItems = cartItems.map(item => ({
@@ -35,12 +39,8 @@ const PaymentPage = () => {
           },
           body: JSON.stringify({
             orderItems,
-            shippingAddress: {
-              address: '123 Main St',
-              city: 'Anytown',
-              postalCode: '12345',
-            },
-            totalPrice: totalPrice + 10,
+            shippingAddress,
+            totalPrice,
           }),
         });
 
@@ -60,49 +60,56 @@ const PaymentPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-md">
-      <h1 className="text-3xl font-bold mb-8 text-center">Payment</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center">UPI Payment</h1>
+      <div className="bg-white p-6 rounded shadow-md mb-6">
+        <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+        <p className="text-gray-700">Total Amount: ₹{totalPrice}</p>
+      </div>
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md">
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Card Number</label>
+          <label className="block text-gray-700 mb-2">Select Bank</label>
+          <select
+            value={bank}
+            onChange={(e) => setBank(e.target.value)}
+            className="w-full px-3 py-2 border rounded"
+            required
+          >
+            <option value="">Choose a bank</option>
+            <option value="SBI">State Bank of India (SBI)</option>
+            <option value="HDFC">HDFC Bank</option>
+            <option value="ICICI">ICICI Bank</option>
+            <option value="Axis">Axis Bank</option>
+          </select>
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">UPI ID</label>
           <input
             type="text"
-            value={cardNumber}
-            onChange={(e) => setCardNumber(e.target.value)}
+            value={upiId}
+            onChange={(e) => setUpiId(e.target.value)}
             className="w-full px-3 py-2 border rounded"
-            placeholder="1234 5678 9012 3456"
+            placeholder="user@upi"
             required
           />
         </div>
-        <div className="mb-4 flex gap-4">
-          <div className="flex-1">
-            <label className="block text-gray-700 mb-2">Expiry</label>
-            <input
-              type="text"
-              value={expiry}
-              onChange={(e) => setExpiry(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
-              placeholder="MM/YY"
-              required
-            />
-          </div>
-          <div className="flex-1">
-            <label className="block text-gray-700 mb-2">CVV</label>
-            <input
-              type="text"
-              value={cvv}
-              onChange={(e) => setCvv(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
-              placeholder="123"
-              required
-            />
-          </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">6-Digit PIN</label>
+          <input
+            type="password"
+            value={pin}
+            onChange={(e) => setPin(e.target.value)}
+            className="w-full px-3 py-2 border rounded"
+            placeholder="123456"
+            maxLength="6"
+            required
+          />
         </div>
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || pin.length !== 6}
           className="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600 disabled:opacity-50"
         >
-          {loading ? 'Processing...' : 'Pay Now'}
+          {loading ? 'Processing Payment...' : 'Pay Now'}
         </button>
       </form>
     </div>

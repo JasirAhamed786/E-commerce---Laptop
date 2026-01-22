@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Star, Filter, Grid, List, SlidersHorizontal, ShoppingCart, Heart, Search } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 const ShopPage = () => {
+  const { addToCart } = useCart();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -379,7 +381,10 @@ const ShopPage = () => {
 
                   {/* Action Buttons */}
                   <div className="mt-4 flex gap-2">
-                    <button className="flex-1 bg-gray-900 text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 text-sm">
+                    <button
+                      onClick={() => addToCart(product)}
+                      className="flex-1 bg-gray-900 text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 text-sm"
+                    >
                       Add to Cart
                     </button>
                     <button className="bg-gray-100 text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors">

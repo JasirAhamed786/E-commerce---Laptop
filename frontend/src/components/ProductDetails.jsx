@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, Star, Heart, Share2, Truck, Shield, RefreshCw, Award } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 const ProductDetails = () => {
+  const { addToCart } = useCart();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -193,6 +195,7 @@ const ProductDetails = () => {
             {/* Action Buttons */}
             <div className="space-y-3">
               <button
+                onClick={() => addToCart({ ...product, qty: quantity })}
                 className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center ${
                   product.stock > 0
                     ? 'btn-primary'
