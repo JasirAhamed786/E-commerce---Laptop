@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Star, Filter, Grid, List, SlidersHorizontal, ShoppingCart, Heart, Search } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 
 const ShopPage = () => {
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -387,8 +389,23 @@ const ShopPage = () => {
                     >
                       Add to Cart
                     </button>
-                    <button className="bg-gray-100 text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors">
-                      <Heart size={18} />
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (isInWishlist(product._id)) {
+                          removeFromWishlist(product._id);
+                        } else {
+                          addToWishlist(product);
+                        }
+                      }}
+                      className={`px-3 py-2 rounded-lg transition-colors ${
+                        isInWishlist(product._id)
+                          ? 'bg-red-100 text-red-600 hover:bg-red-200'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      <Heart size={18} fill={isInWishlist(product._id) ? 'currentColor' : 'none'} />
                     </button>
                   </div>
                 </div>

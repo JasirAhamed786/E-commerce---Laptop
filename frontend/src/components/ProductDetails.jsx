@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, Star, Heart, Share2, Truck, Shield, RefreshCw, Award } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 
 const ProductDetails = () => {
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -208,11 +210,48 @@ const ProductDetails = () => {
               </button>
 
               <div className="grid grid-cols-2 gap-3">
-                <button className="btn-secondary flex items-center justify-center">
-                  <Heart className="w-4 h-4 mr-2" />
-                  Wishlist
+                <button
+                  onClick={() => {
+                    if (isInWishlist(product._id)) {
+                      removeFromWishlist(product._id);
+                    } else {
+                      addToWishlist(product);
+                    }
+                  }}
+                  className={`btn-secondary flex items-center justify-center ${
+                    isInWishlist(product._id) ? 'bg-red-100 text-red-600 hover:bg-red-200' : ''
+                  }`}
+                >
+                  <Heart className={`w-4 h-4 mr-2 ${isInWishlist(product._id) ? 'fill-current' : ''}`} />
+                  {isInWishlist(product._id) ? 'In Wishlist' : 'Wishlist'}
                 </button>
-                <button className="btn-secondary flex items-center justify-center">
+                <button
+                  onClick={async () => {
+                    const shareData = {
+                      title: product.name,
+                      text: `Check out this ${product.brand} ${product.name} for ₹${product.price.toLocaleString()}`,
+                      url: window.location.href
+                    };
+
+                    if (navigator.share) {
+                      try {
+                        await navigator.share(shareData);
+                      } catch (error) {
+                        console.log('Error sharing:', error);
+                      }
+                    } else {
+                      // Fallback to clipboard
+                      try {
+                        await navigator.clipboard.writeText(window.location.href);
+                        alert('Product link copied to clipboard!');
+                      } catch (error) {
+                        console.log('Error copying to clipboard:', error);
+                        alert('Unable to share. Please copy the URL manually.');
+                      }
+                    }
+                  }}
+                  className="btn-secondary flex items-center justify-center"
+                >
                   <Share2 className="w-4 h-4 mr-2" />
                   Share
                 </button>

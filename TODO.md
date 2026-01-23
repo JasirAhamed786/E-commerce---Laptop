@@ -1,8 +1,8 @@
-# TODO: Add Navigation to OrderHistoryPage with Icons on Home Page
+# TODO: Implement Wishlist and Share Features on ShopPage and ProductDetails
 
 ## Steps to Complete:
-- [x] Edit frontend/src/components/Home.jsx to replace "View Mobiles" button with "My Orders" linking to /orders
-- [x] Add laptop icon to "Shop Laptops" button
-- [x] Add shopping bag icon to "My Orders" button
-- [x] Update button classes for icon-text alignment using flexbox
-- [ ] Test navigation to ensure links work correctly and icons display properly
+- [x] Import useWishlist in ShopPage.jsx and make Heart button toggle wishlist with visual feedback
+- [x] Import useWishlist in ProductDetails.jsx and make Wishlist button toggle wishlist with visual feedback
+- [x] Implement Share button in ProductDetails.jsx using Web Share API with clipboard fallback
+- [ ] Test wishlist toggle functionality on both pages
+- [ ] Test share functionality on ProductDetails

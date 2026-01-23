@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, User, Menu, LogOut, X, UserCircle } from 'lucide-react';
+import { ShoppingCart, User, Menu, LogOut, X, UserCircle, Heart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 import toast from 'react-hot-toast';
 import logo from '../../Lap logo 2.png';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const { cartItems } = useCart();
+  const { wishlist } = useWishlist();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -60,6 +62,16 @@ const Navbar = () => {
 
         {/* 3. Right Icons (Dark Grey with Orange Hover) */}
         <div className="flex items-center gap-4 font-medium text-sm text-slate-600">
+
+          <Link to="/wishlist" className="flex items-center gap-2 hover:text-red-500 transition p-2 rounded-lg hover:bg-red-50 relative">
+            <Heart className="w-5 h-5" />
+            <span className="hidden lg:block">Wishlist</span>
+            {wishlist.length > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {wishlist.length}
+              </span>
+            )}
+          </Link>
 
           <Link to="/cart" className="flex items-center gap-2 hover:text-orange-600 transition p-2 rounded-lg hover:bg-orange-50 relative">
             <ShoppingCart className="w-5 h-5" />
