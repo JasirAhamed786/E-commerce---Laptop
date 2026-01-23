@@ -51,16 +51,36 @@ const ShippingPage = () => {
 
       <div className="max-w-screen-xl mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
-          {/* Progress Bar */}
+          {/* Checkout Progress */}
           <div className="mb-8">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700">Cart</span>
-              <span className="text-sm font-medium text-gray-700">Shipping</span>
-              <span className="text-sm font-medium text-gray-700">Payment</span>
-              <span className="text-sm font-medium text-gray-700">Confirmation</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-amazon-orange h-2 rounded-full" style={{ width: '50%' }}></div>
+            <div className="flex items-center justify-center space-x-8">
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-semibold">
+                  1
+                </div>
+                <span className="ml-2 text-sm font-medium text-gray-600">Cart</span>
+              </div>
+              <div className="w-16 h-px bg-amazon-orange"></div>
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-amazon-orange text-white rounded-full flex items-center justify-center text-sm font-semibold">
+                  2
+                </div>
+                <span className="ml-2 text-sm font-medium text-amazon-orange">Shipping</span>
+              </div>
+              <div className="w-16 h-px bg-gray-300"></div>
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-semibold">
+                  3
+                </div>
+                <span className="ml-2 text-sm font-medium text-gray-600">Payment</span>
+              </div>
+              <div className="w-16 h-px bg-gray-300"></div>
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-semibold">
+                  4
+                </div>
+                <span className="ml-2 text-sm font-medium text-gray-600">Confirmation</span>
+              </div>
             </div>
           </div>
 
