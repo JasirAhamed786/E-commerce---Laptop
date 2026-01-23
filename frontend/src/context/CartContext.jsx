@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 const CartContext = createContext();
 
@@ -49,9 +50,12 @@ export const CartProvider = ({ children }) => {
           ? { ...item, qty: newQty }
           : item
       ));
+      toast.success(`Updated ${product.name} quantity to ${newQty} in cart!`);
     } else {
       // If qty is not specified, default to 1
-      setCartItems([...cartItems, { ...product, qty: product.qty || 1 }]);
+      const qty = product.qty || 1;
+      setCartItems([...cartItems, { ...product, qty }]);
+      toast.success(`${product.name} added to cart!`);
     }
   };
 
