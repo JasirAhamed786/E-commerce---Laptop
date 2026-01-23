@@ -26,59 +26,122 @@ const OrderHistoryPage = () => {
   }, []);
 
   if (loading) {
-    return <div className="text-center py-8">Loading orders...</div>;
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading your orders...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">My Orders</h1>
-      {orders.length === 0 ? (
-        <p className="text-center text-gray-600">No orders found.</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white shadow-md rounded">
-            <thead>
-              <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                <th className="py-3 px-6 text-left">Order ID</th>
-                <th className="py-3 px-6 text-left">Date</th>
-                <th className="py-3 px-6 text-left">Total</th>
-                <th className="py-3 px-6 text-left">Status</th>
-                <th className="py-3 px-6 text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-600 text-sm font-light">
-              {orders.map((order) => (
-                <tr key={order._id} className="border-b border-gray-200 hover:bg-gray-100">
-                  <td className="py-3 px-6 text-left whitespace-nowrap">
-                    {order._id.substring(0, 8)}...
-                  </td>
-                  <td className="py-3 px-6 text-left">
-                    {new Date(order.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="py-3 px-6 text-left">₹{order.totalPrice}</td>
-                  <td className="py-3 px-6 text-left">
-                    <span className={`py-1 px-3 rounded-full text-xs ${
-                      order.status === 'Delivered' ? 'bg-green-200 text-green-600' :
-                      order.status === 'Shipped' ? 'bg-blue-200 text-blue-600' :
-                      'bg-yellow-200 text-yellow-600'
-                    }`}>
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="py-3 px-6 text-center">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header Section */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">My Orders</h1>
+              <p className="text-gray-600 mt-1">Track and manage your order history</p>
+            </div>
+            <Link
+              to="/shop"
+              className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+            >
+              Continue Shopping
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Orders Content */}
+      <div className="container mx-auto px-4 py-8">
+        {orders.length === 0 ? (
+          <div className="bg-white rounded-xl shadow-sm p-12 text-center">
+            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">No orders yet</h3>
+            <p className="text-gray-600 mb-6">You haven't placed any orders yet. Start shopping to see your orders here.</p>
+            <Link
+              to="/shop"
+              className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-block"
+            >
+              Start Shopping
+            </Link>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {orders.map((order) => (
+              <div key={order._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <p className="text-sm text-gray-600">Order #{order._id.substring(0, 8)}</p>
+                      <p className="text-sm text-gray-500">{new Date(order.createdAt).toLocaleDateString('en-IN', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-gray-900">₹{order.totalPrice.toLocaleString('en-IN')}</p>
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                        order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
+                        order.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
+                        order.status === 'Processing' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {order.status}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="flex -space-x-2">
+                        {order.orderItems.slice(0, 3).map((item, index) => (
+                          <div key={index} className="w-10 h-10 bg-gray-200 rounded-lg border-2 border-white overflow-hidden">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.target.src = 'https://via.placeholder.com/40x40?text=No+Image';
+                              }}
+                            />
+                          </div>
+                        ))}
+                        {order.orderItems.length > 3 && (
+                          <div className="w-10 h-10 bg-gray-100 rounded-lg border-2 border-white flex items-center justify-center">
+                            <span className="text-xs font-medium text-gray-600">+{order.orderItems.length - 3}</span>
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          {order.orderItems.length} item{order.orderItems.length > 1 ? 's' : ''}
+                        </p>
+                      </div>
+                    </div>
+
                     <Link
                       to={`/orders/${order._id}`}
-                      className="bg-orange-500 hover:bg-orange-600 text-white py-1 px-3 rounded text-xs"
+                      className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-lg font-semibold text-sm transition-colors"
                     >
                       View Details
                     </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

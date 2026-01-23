@@ -10,6 +10,8 @@ const ShippingPage = () => {
   const [postalCode, setPostalCode] = useState('');
   const [country, setCountry] = useState('India');
   const [useProfileAddress, setUseProfileAddress] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const { saveShippingAddress } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -28,10 +30,94 @@ const ShippingPage = () => {
     }
   }, [useProfileAddress, user]);
 
+  // Validation functions
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'address':
+        if (!value.trim()) return 'Street address is required';
+        if (value.trim().length < 10) return 'Please enter a complete address';
+        return '';
+      case 'city':
+        if (!value.trim()) return 'City is required';
+        if (value.trim().length < 2) return 'City name must be at least 2 characters';
+        if (!/^[a-zA-Z\s]+$/.test(value.trim())) return 'City name should only contain letters';
+        return '';
+      case 'postalCode':
+        if (!value.trim()) return 'Postal code is required';
+        if (country === 'India') {
+          if (!/^[1-9][0-9]{5}$/.test(value.trim())) return 'Please enter a valid 6-digit Indian postal code';
+        } else {
+          if (!/^[0-9]{5,10}$/.test(value.trim())) return 'Please enter a valid postal code';
+        }
+        return '';
+      default:
+        return '';
+    }
+  };
+
+  const handleFieldChange = (name, value) => {
+    switch (name) {
+      case 'address':
+        setAddress(value);
+        break;
+      case 'city':
+        setCity(value);
+        break;
+      case 'postalCode':
+        setPostalCode(value);
+        break;
+      case 'country':
+        setCountry(value);
+        break;
+    }
+
+    // Validate field on change
+    const error = validateField(name, value);
+    setErrors(prev => ({ ...prev, [name]: error }));
+
+    // Mark field as touched
+    setTouched(prev => ({ ...prev, [name]: true }));
+  };
+
+  const handleFieldBlur = (name) => {
+    setTouched(prev => ({ ...prev, [name]: true }));
+    let value;
+    switch (name) {
+      case 'address': value = address; break;
+      case 'city': value = city; break;
+      case 'postalCode': value = postalCode; break;
+      default: value = '';
+    }
+    const error = validateField(name, value);
+    setErrors(prev => ({ ...prev, [name]: error }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    saveShippingAddress({ address, city, postalCode, country });
-    navigate('/payment');
+
+    // Mark all fields as touched
+    setTouched({
+      address: true,
+      city: true,
+      postalCode: true,
+    });
+
+    // Validate all fields
+    const newErrors = {
+      address: validateField('address', address),
+      city: validateField('city', city),
+      postalCode: validateField('postalCode', postalCode),
+    };
+
+    setErrors(newErrors);
+
+    // Check if there are any errors
+    const hasErrors = Object.values(newErrors).some(error => error !== '');
+
+    if (!hasErrors) {
+      saveShippingAddress({ address, city, postalCode, country });
+      navigate('/payment');
+    }
   };
 
   return (
@@ -119,14 +205,18 @@ const ShippingPage = () => {
                   <input
                     type="text"
                     value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    onChange={(e) => handleFieldChange('address', e.target.value)}
+                    onBlur={() => handleFieldBlur('address')}
                     disabled={useProfileAddress}
-                    className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amazon-orange focus:border-transparent transition-colors ${
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amazon-orange focus:border-transparent transition-colors ${
                       useProfileAddress ? 'bg-gray-50 cursor-not-allowed' : ''
-                    }`}
+                    } ${touched.address && errors.address ? 'border-red-500' : 'border-gray-300'}`}
                     placeholder="123 Main Street, Apartment 4B"
                     required
                   />
+                  {touched.address && errors.address && (
+                    <p className="mt-1 text-sm text-red-600">{errors.address}</p>
+                  )}
                 </div>
 
                 <div>
@@ -136,14 +226,18 @@ const ShippingPage = () => {
                   <input
                     type="text"
                     value={city}
-                    onChange={(e) => setCity(e.target.value)}
+                    onChange={(e) => handleFieldChange('city', e.target.value)}
+                    onBlur={() => handleFieldBlur('city')}
                     disabled={useProfileAddress}
-                    className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amazon-blue focus:border-transparent transition-colors ${
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amazon-blue focus:border-transparent transition-colors ${
                       useProfileAddress ? 'bg-gray-50 cursor-not-allowed' : ''
-                    }`}
+                    } ${touched.city && errors.city ? 'border-red-500' : 'border-gray-300'}`}
                     placeholder="Mumbai"
                     required
                   />
+                  {touched.city && errors.city && (
+                    <p className="mt-1 text-sm text-red-600">{errors.city}</p>
+                  )}
                 </div>
 
                 <div>
@@ -153,14 +247,18 @@ const ShippingPage = () => {
                   <input
                     type="text"
                     value={postalCode}
-                    onChange={(e) => setPostalCode(e.target.value)}
+                    onChange={(e) => handleFieldChange('postalCode', e.target.value)}
+                    onBlur={() => handleFieldBlur('postalCode')}
                     disabled={useProfileAddress}
-                    className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amazon-orange focus:border-transparent transition-colors ${
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amazon-orange focus:border-transparent transition-colors ${
                       useProfileAddress ? 'bg-gray-50 cursor-not-allowed' : ''
-                    }`}
+                    } ${touched.postalCode && errors.postalCode ? 'border-red-500' : 'border-gray-300'}`}
                     placeholder="400001"
                     required
                   />
+                  {touched.postalCode && errors.postalCode && (
+                    <p className="mt-1 text-sm text-red-600">{errors.postalCode}</p>
+                  )}
                 </div>
 
                 <div className="md:col-span-2">

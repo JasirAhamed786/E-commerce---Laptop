@@ -13,28 +13,181 @@ const PaymentPage = () => {
   const [cvv, setCvv] = useState('');
   const [cardName, setCardName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const { cartItems, totalPrice, clearCart, shippingAddress } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  // Validation functions
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'bank':
+        if (paymentMethod === 'upi' && !value.trim()) return 'Please select a bank';
+        return '';
+      case 'upiId':
+        if (paymentMethod === 'upi') {
+          if (!value.trim()) return 'UPI ID is required';
+          if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+$/.test(value.trim())) return 'Please enter a valid UPI ID (e.g., user@upi)';
+        }
+        return '';
+      case 'pin':
+        if (paymentMethod === 'upi') {
+          if (!value.trim()) return 'PIN is required';
+          if (!/^\d{6}$/.test(value.trim())) return 'PIN must be exactly 6 digits';
+        }
+        return '';
+      case 'cardNumber':
+        if (paymentMethod === 'card') {
+          if (!value.trim()) return 'Card number is required';
+          const cleanNumber = value.replace(/\s/g, '');
+          if (!/^\d{13,19}$/.test(cleanNumber)) return 'Please enter a valid card number (13-19 digits)';
+          if (!luhnCheck(cleanNumber)) return 'Please enter a valid card number';
+        }
+        return '';
+      case 'expiryDate':
+        if (paymentMethod === 'card') {
+          if (!value.trim()) return 'Expiry date is required';
+          if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(value.trim())) return 'Please enter a valid expiry date (MM/YY)';
+          const [month, year] = value.split('/');
+          const currentDate = new Date();
+          const currentYear = currentDate.getFullYear() % 100;
+          const currentMonth = currentDate.getMonth() + 1;
+          const expYear = parseInt(year);
+          const expMonth = parseInt(month);
+          if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
+            return 'Card has expired';
+          }
+        }
+        return '';
+      case 'cvv':
+        if (paymentMethod === 'card') {
+          if (!value.trim()) return 'CVV is required';
+          if (!/^\d{3,4}$/.test(value.trim())) return 'CVV must be 3 or 4 digits';
+        }
+        return '';
+      case 'cardName':
+        if (paymentMethod === 'card') {
+          if (!value.trim()) return 'Cardholder name is required';
+          if (value.trim().length < 2) return 'Cardholder name must be at least 2 characters';
+          if (!/^[a-zA-Z\s]+$/.test(value.trim())) return 'Cardholder name should only contain letters';
+        }
+        return '';
+      default:
+        return '';
+    }
+  };
+
+  // Luhn algorithm for card number validation
+  const luhnCheck = (cardNumber) => {
+    let sum = 0;
+    let shouldDouble = false;
+    for (let i = cardNumber.length - 1; i >= 0; i--) {
+      let digit = parseInt(cardNumber.charAt(i));
+      if (shouldDouble) {
+        digit *= 2;
+        if (digit > 9) digit -= 9;
+      }
+      sum += digit;
+      shouldDouble = !shouldDouble;
+    }
+    return sum % 10 === 0;
+  };
+
+  const handleFieldChange = (name, value) => {
+    switch (name) {
+      case 'bank':
+        setBank(value);
+        break;
+      case 'upiId':
+        setUpiId(value);
+        break;
+      case 'pin':
+        setPin(value);
+        break;
+      case 'cardNumber':
+        // Format card number with spaces
+        const formatted = value.replace(/\s/g, '').replace(/(\d{4})/g, '$1 ').trim();
+        setCardNumber(formatted);
+        break;
+      case 'expiryDate':
+        // Format expiry date
+        let formattedExpiry = value.replace(/\D/g, '');
+        if (formattedExpiry.length >= 2) {
+          formattedExpiry = formattedExpiry.slice(0, 2) + '/' + formattedExpiry.slice(2, 4);
+        }
+        setExpiryDate(formattedExpiry);
+        break;
+      case 'cvv':
+        setCvv(value.replace(/\D/g, ''));
+        break;
+      case 'cardName':
+        setCardName(value);
+        break;
+    }
+
+    // Validate field on change
+    const error = validateField(name, value);
+    setErrors(prev => ({ ...prev, [name]: error }));
+
+    // Mark field as touched
+    setTouched(prev => ({ ...prev, [name]: true }));
+  };
+
+  const handleFieldBlur = (name) => {
+    setTouched(prev => ({ ...prev, [name]: true }));
+    let value;
+    switch (name) {
+      case 'bank': value = bank; break;
+      case 'upiId': value = upiId; break;
+      case 'pin': value = pin; break;
+      case 'cardNumber': value = cardNumber; break;
+      case 'expiryDate': value = expiryDate; break;
+      case 'cvv': value = cvv; break;
+      case 'cardName': value = cardName; break;
+      default: value = '';
+    }
+    const error = validateField(name, value);
+    setErrors(prev => ({ ...prev, [name]: error }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation based on payment method
-    if (paymentMethod === 'upi') {
-      if (!upiId || pin.length !== 6) {
-        alert('Please fill all UPI payment details');
-        return;
+    // Mark all relevant fields as touched
+    const fieldsToValidate = paymentMethod === 'upi'
+      ? ['bank', 'upiId', 'pin']
+      : ['cardNumber', 'expiryDate', 'cvv', 'cardName'];
+
+    const newTouched = {};
+    fieldsToValidate.forEach(field => {
+      newTouched[field] = true;
+    });
+    setTouched(prev => ({ ...prev, ...newTouched }));
+
+    // Validate all fields
+    const newErrors = {};
+    fieldsToValidate.forEach(field => {
+      let value;
+      switch (field) {
+        case 'bank': value = bank; break;
+        case 'upiId': value = upiId; break;
+        case 'pin': value = pin; break;
+        case 'cardNumber': value = cardNumber; break;
+        case 'expiryDate': value = expiryDate; break;
+        case 'cvv': value = cvv; break;
+        case 'cardName': value = cardName; break;
       }
-    } else if (paymentMethod === 'card') {
-      if (!cardNumber || !expiryDate || !cvv || !cardName) {
-        alert('Please fill all card payment details');
-        return;
-      }
-      if (cvv.length !== 3) {
-        alert('CVV must be 3 digits');
-        return;
-      }
+      newErrors[field] = validateField(field, value);
+    });
+
+    setErrors(newErrors);
+
+    // Check if there are any errors
+    const hasErrors = Object.values(newErrors).some(error => error !== '');
+
+    if (hasErrors) {
+      return;
     }
 
     if (!shippingAddress.address || !shippingAddress.city || !shippingAddress.postalCode) {
@@ -177,8 +330,9 @@ const PaymentPage = () => {
                       </label>
                       <select
                         value={bank}
-                        onChange={(e) => setBank(e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amazon-orange focus:border-transparent"
+                        onChange={(e) => handleFieldChange('bank', e.target.value)}
+                        onBlur={() => handleFieldBlur('bank')}
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amazon-orange focus:border-transparent ${touched.bank && errors.bank ? 'border-red-500' : 'border-gray-300'}`}
                         required
                       >
                         <option value="">Choose a bank</option>
@@ -188,6 +342,9 @@ const PaymentPage = () => {
                         <option value="Axis">Axis Bank</option>
                         <option value="PNB">Punjab National Bank</option>
                       </select>
+                      {touched.bank && errors.bank && (
+                        <p className="mt-1 text-sm text-red-600">{errors.bank}</p>
+                      )}
                     </div>
 
                     <div>
@@ -197,11 +354,15 @@ const PaymentPage = () => {
                       <input
                         type="text"
                         value={upiId}
-                        onChange={(e) => setUpiId(e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amazon-orange focus:border-transparent"
+                        onChange={(e) => handleFieldChange('upiId', e.target.value)}
+                        onBlur={() => handleFieldBlur('upiId')}
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amazon-orange focus:border-transparent ${touched.upiId && errors.upiId ? 'border-red-500' : 'border-gray-300'}`}
                         placeholder="user@upi"
                         required
                       />
+                      {touched.upiId && errors.upiId && (
+                        <p className="mt-1 text-sm text-red-600">{errors.upiId}</p>
+                      )}
                     </div>
 
                     <div>
@@ -211,12 +372,16 @@ const PaymentPage = () => {
                       <input
                         type="password"
                         value={pin}
-                        onChange={(e) => setPin(e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amazon-orange focus:border-transparent"
+                        onChange={(e) => handleFieldChange('pin', e.target.value)}
+                        onBlur={() => handleFieldBlur('pin')}
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amazon-orange focus:border-transparent ${touched.pin && errors.pin ? 'border-red-500' : 'border-gray-300'}`}
                         placeholder="123456"
                         maxLength="6"
                         required
                       />
+                      {touched.pin && errors.pin && (
+                        <p className="mt-1 text-sm text-red-600">{errors.pin}</p>
+                      )}
                     </div>
                   </div>
                 )}

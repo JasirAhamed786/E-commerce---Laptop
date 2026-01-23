@@ -38,6 +38,11 @@ const orderSchema = mongoose.Schema(
     paidAt: {
       type: Date,
     },
+    status: {
+      type: String,
+      required: true,
+      default: 'Pending',
+    },
   },
   {
     timestamps: true,
