@@ -25,7 +25,7 @@ const ProductDetails = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await fetch(`http://192.168.176.185:5000/api/products/${id}`);
+      const response = await fetch(`http://localhost:5000/api/products/${id}`);
       if (!response.ok) {
         throw new Error('Product not found');
       }
@@ -42,7 +42,7 @@ const ProductDetails = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amazon-blue mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amazon-orange mx-auto mb-4"></div>
           <p className="text-gray-600">Loading product details...</p>
         </div>
       </div>
@@ -73,9 +73,9 @@ const ProductDetails = () => {
       <div className="bg-white border-b">
         <div className="max-w-screen-xl mx-auto px-4 py-3">
           <nav className="text-sm text-gray-600">
-            <Link to="/" className="hover:text-amazon-blue">Home</Link>
+            <Link to="/" className="hover:text-amazon-orange">Home</Link>
             <span className="mx-2">›</span>
-            <Link to="/shop" className="hover:text-amazon-blue">Shop</Link>
+            <Link to="/shop" className="hover:text-amazon-orange">Shop</Link>
             <span className="mx-2">›</span>
             <span className="text-gray-900 font-medium">{product.name}</span>
           </nav>
@@ -100,7 +100,7 @@ const ProductDetails = () => {
                     key={index}
                     onClick={() => setSelectedImage(index)}
                     className={`w-20 h-20 rounded-lg overflow-hidden border-2 ${
-                      selectedImage === index ? 'border-amazon-blue' : 'border-gray-300'
+                      selectedImage === index ? 'border-amazon-orange' : 'border-gray-300'
                     }`}
                   >
                     <img
@@ -150,7 +150,7 @@ const ProductDetails = () => {
                 {product.usageCategory.map((category) => (
                   <span
                     key={category}
-                    className="bg-amazon-blue bg-opacity-10 text-amazon-blue px-3 py-1 rounded-full text-sm font-medium"
+                    className="bg-amazon-orange bg-opacity-10 text-amazon-orange px-3 py-1 rounded-full text-sm font-medium"
                   >
                     {category}
                   </span>
@@ -183,7 +183,7 @@ const ProductDetails = () => {
                 <select
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amazon-blue"
+                  className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amazon-orange"
                 >
                   {[...Array(Math.min(10, product.stock))].map((_, i) => (
                     <option key={i + 1} value={i + 1}>{i + 1}</option>
@@ -222,7 +222,7 @@ const ProductDetails = () => {
             {/* Delivery Info */}
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center mb-3">
-                <Truck className="w-5 h-5 text-amazon-blue mr-2" />
+                <Truck className="w-5 h-5 text-amazon-orange mr-2" />
                 <span className="font-medium">Free Delivery</span>
               </div>
               <p className="text-sm text-gray-600 mb-2">
@@ -241,27 +241,27 @@ const ProductDetails = () => {
           <h2 className="text-2xl font-bold mb-6">Technical Specifications</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="border-b pb-4">
-              <h4 className="font-semibold text-amazon-blue mb-2">Processor</h4>
+              <h4 className="font-semibold text-amazon-orange mb-2">Processor</h4>
               <p className="text-gray-700">{product.specs.processor}</p>
             </div>
             <div className="border-b pb-4">
-              <h4 className="font-semibold text-amazon-blue mb-2">RAM</h4>
+              <h4 className="font-semibold text-amazon-orange mb-2">RAM</h4>
               <p className="text-gray-700">{product.specs.ram}</p>
             </div>
             <div className="border-b pb-4">
-              <h4 className="font-semibold text-amazon-blue mb-2">Storage</h4>
+              <h4 className="font-semibold text-amazon-orange mb-2">Storage</h4>
               <p className="text-gray-700">{product.specs.storage}</p>
             </div>
             <div className="border-b pb-4">
-              <h4 className="font-semibold text-amazon-blue mb-2">Screen Size</h4>
+              <h4 className="font-semibold text-amazon-orange mb-2">Screen Size</h4>
               <p className="text-gray-700">{product.specs.screenSize}</p>
             </div>
             <div className="border-b pb-4">
-              <h4 className="font-semibold text-amazon-blue mb-2">Battery</h4>
+              <h4 className="font-semibold text-amazon-orange mb-2">Battery</h4>
               <p className="text-gray-700">{product.specs.battery}</p>
             </div>
             <div className="border-b pb-4">
-              <h4 className="font-semibold text-amazon-blue mb-2">Graphics Card</h4>
+              <h4 className="font-semibold text-amazon-orange mb-2">Graphics Card</h4>
               <p className="text-gray-700">{product.specs.graphicsCard}</p>
             </div>
           </div>

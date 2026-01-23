@@ -50,7 +50,7 @@ const CartPage = () => {
               <span>₹{(totalPrice + 100).toLocaleString()}</span>
             </div>
             <Link
-              to="/payment"
+              to="/shipping"
               className="block bg-orange-500 text-white text-center px-6 py-2 rounded mt-4 hover:bg-orange-600"
             >
               Proceed to Checkout
