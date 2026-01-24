@@ -1,8 +1,8 @@
-# TODO: Implement Wishlist and Share Features on ShopPage and ProductDetails
+# TODO: Make Wishlist User-Specific
 
-## Steps to Complete:
-- [x] Import useWishlist in ShopPage.jsx and make Heart button toggle wishlist with visual feedback
-- [x] Import useWishlist in ProductDetails.jsx and make Wishlist button toggle wishlist with visual feedback
-- [x] Implement Share button in ProductDetails.jsx using Web Share API with clipboard fallback
-- [ ] Test wishlist toggle functionality on both pages
-- [ ] Test share functionality on ProductDetails
+- [ ] Add 'wishlist' field to User model (array of ObjectIds)
+- [ ] Create wishlistController.js with getWishlist, addToWishlist, removeFromWishlist
+- [ ] Create wishlistRoutes.js with protected routes
+- [ ] Update server.js to include wishlist routes
+- [ ] Modify WishlistContext.jsx to use API calls instead of localStorage
+- [ ] Test with multiple users
