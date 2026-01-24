@@ -79,7 +79,7 @@ export const WishlistProvider = ({ children }) => {
     }
   };
 
-  const removeFromWishlist = async (productId) => {
+  const removeFromWishlist = async (productId, silent = false) => {
     if (!user) {
       toast.error('Please login to manage wishlist');
       return;
@@ -98,7 +98,7 @@ export const WishlistProvider = ({ children }) => {
       if (response.ok) {
         const productToRemove = wishlist.find(item => item._id === productId);
         setWishlist(prev => prev.filter(item => item._id !== productId));
-        if (productToRemove) {
+        if (productToRemove && !silent) {
           toast.success(`${productToRemove.name} removed from wishlist!`);
         }
       } else {

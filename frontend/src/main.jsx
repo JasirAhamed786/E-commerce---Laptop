@@ -10,8 +10,8 @@ import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <AuthProvider>
-    <CartProvider>
-      <WishlistProvider>
+    <WishlistProvider>
+      <CartProvider>
         <BrowserRouter>
           <App />
           <Toaster
@@ -25,7 +25,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             }}
           />
         </BrowserRouter>
-      </WishlistProvider>
-    </CartProvider>
+      </CartProvider>
+    </WishlistProvider>
   </AuthProvider>,
 )

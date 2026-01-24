@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Star, Filter, Grid, List, SlidersHorizontal, ShoppingCart, Heart, Search } from 'lucide-react';
+import { Star, Filter, Grid, List, SlidersHorizontal, ShoppingCart, Heart, Search, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 
@@ -21,6 +21,12 @@ const ShopPage = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [expandedSections, setExpandedSections] = useState({
+    usage: true,
+    ram: true,
+    brand: true,
+    price: true
+  });
 
   useEffect(() => {
     fetchProducts();
@@ -109,6 +115,13 @@ const ShopPage = () => {
     setSearchTerm('');
   };
 
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -152,93 +165,154 @@ const ShopPage = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
           <div className={`lg:w-64 ${showFilters ? 'block' : 'hidden lg:block'}`}>
-            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-4">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold flex items-center">
-                  <SlidersHorizontal className="w-5 h-5 mr-2" />
-                  Filters
-                </h3>
+            <div className="bg-white rounded-lg shadow-sm sticky top-4 max-h-[calc(100vh-2rem)] overflow-hidden">
+              {/* Header */}
+              <div className="p-6 border-b border-gray-100">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold flex items-center">
+                    <SlidersHorizontal className="w-5 h-5 mr-2" />
+                    Filters
+                  </h3>
+                  <button
+                    onClick={clearFilters}
+                    className="text-sm text-amazon-blue hover:underline"
+                  >
+                    Clear All
+                  </button>
+                </div>
+                {/* Mobile Close Button */}
                 <button
-                  onClick={clearFilters}
-                  className="text-sm text-amazon-blue hover:underline"
+                  onClick={() => setShowFilters(false)}
+                  className="lg:hidden absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 >
-                  Clear All
+                  <X className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Usage Category */}
-              <div className="mb-6">
-                <h4 className="font-medium mb-3">Usage Category</h4>
-                <div className="space-y-2">
-                  {['Gaming', 'Coding', 'Office', 'Student'].map((usage) => (
-                    <label key={usage} className="flex items-center">
-                      <input
-                        type="radio"
-                        name="usage"
-                        value={usage}
-                        checked={filters.usage === usage}
-                        onChange={(e) => handleFilterChange('usage', e.target.value)}
-                        className="mr-2"
-                      />
-                      <span className="text-sm">{usage}</span>
-                    </label>
-                  ))}
+              {/* Scrollable Content */}
+              <div className="overflow-y-auto max-h-[calc(100vh-8rem)] p-6">
+                {/* Usage Category */}
+                <div className="mb-6">
+                  <button
+                    onClick={() => toggleSection('usage')}
+                    className="flex items-center justify-between w-full font-medium mb-3 hover:text-amazon-blue transition-colors"
+                  >
+                    Usage Category
+                    {expandedSections.usage ? (
+                      <ChevronUp className="w-4 h-4" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4" />
+                    )}
+                  </button>
+                  {expandedSections.usage && (
+                    <div className="space-y-3 animate-in slide-in-from-top-2 duration-200">
+                      {['Gaming', 'Coding', 'Office', 'Student'].map((usage) => (
+                        <label key={usage} className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                          <input
+                            type="radio"
+                            name="usage"
+                            value={usage}
+                            checked={filters.usage === usage}
+                            onChange={(e) => handleFilterChange('usage', e.target.value)}
+                            className="mr-3 accent-amazon-blue"
+                          />
+                          <span className="text-sm font-medium">{usage}</span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
 
-              {/* RAM Filter */}
-              <div className="mb-6">
-                <h4 className="font-medium mb-3">RAM</h4>
-                <div className="space-y-2">
-                  {ramOptions.map((ram) => (
-                    <label key={ram} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={filters.ram === ram}
-                        onChange={(e) => handleFilterChange('ram', filters.ram === ram ? '' : ram)}
-                        className="mr-2"
-                      />
-                      <span className="text-sm">{ram}</span>
-                    </label>
-                  ))}
+                {/* RAM Filter */}
+                <div className="mb-6">
+                  <button
+                    onClick={() => toggleSection('ram')}
+                    className="flex items-center justify-between w-full font-medium mb-3 hover:text-amazon-blue transition-colors"
+                  >
+                    RAM
+                    {expandedSections.ram ? (
+                      <ChevronUp className="w-4 h-4" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4" />
+                    )}
+                  </button>
+                  {expandedSections.ram && (
+                    <div className="space-y-3 animate-in slide-in-from-top-2 duration-200">
+                      {ramOptions.map((ram) => (
+                        <label key={ram} className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                          <input
+                            type="checkbox"
+                            checked={filters.ram === ram}
+                            onChange={(e) => handleFilterChange('ram', filters.ram === ram ? '' : ram)}
+                            className="mr-3 accent-amazon-blue"
+                          />
+                          <span className="text-sm font-medium">{ram}</span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
 
-              {/* Brand Filter */}
-              <div className="mb-6">
-                <h4 className="font-medium mb-3">Brand</h4>
-                <div className="space-y-2">
-                  {brandOptions.map((brand) => (
-                    <label key={brand} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={filters.brand === brand}
-                        onChange={(e) => handleFilterChange('brand', filters.brand === brand ? '' : brand)}
-                        className="mr-2"
-                      />
-                      <span className="text-sm">{brand}</span>
-                    </label>
-                  ))}
+                {/* Brand Filter */}
+                <div className="mb-6">
+                  <button
+                    onClick={() => toggleSection('brand')}
+                    className="flex items-center justify-between w-full font-medium mb-3 hover:text-amazon-blue transition-colors"
+                  >
+                    Brand
+                    {expandedSections.brand ? (
+                      <ChevronUp className="w-4 h-4" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4" />
+                    )}
+                  </button>
+                  {expandedSections.brand && (
+                    <div className="space-y-3 animate-in slide-in-from-top-2 duration-200">
+                      {brandOptions.map((brand) => (
+                        <label key={brand} className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                          <input
+                            type="checkbox"
+                            checked={filters.brand === brand}
+                            onChange={(e) => handleFilterChange('brand', filters.brand === brand ? '' : brand)}
+                            className="mr-3 accent-amazon-blue"
+                          />
+                          <span className="text-sm font-medium">{brand}</span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
 
-              {/* Price Range */}
-              <div className="mb-6">
-                <h4 className="font-medium mb-3">Price Range</h4>
-                <div className="space-y-2">
-                  {priceRanges.map((range) => (
-                    <label key={range.value} className="flex items-center">
-                      <input
-                        type="radio"
-                        name="priceRange"
-                        value={range.value}
-                        checked={filters.priceRange === range.value}
-                        onChange={(e) => handleFilterChange('priceRange', e.target.value)}
-                        className="mr-2"
-                      />
-                      <span className="text-sm">{range.label}</span>
-                    </label>
-                  ))}
+                {/* Price Range */}
+                <div className="mb-6">
+                  <button
+                    onClick={() => toggleSection('price')}
+                    className="flex items-center justify-between w-full font-medium mb-3 hover:text-amazon-blue transition-colors"
+                  >
+                    Price Range
+                    {expandedSections.price ? (
+                      <ChevronUp className="w-4 h-4" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4" />
+                    )}
+                  </button>
+                  {expandedSections.price && (
+                    <div className="space-y-3 animate-in slide-in-from-top-2 duration-200">
+                      {priceRanges.map((range) => (
+                        <label key={range.value} className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                          <input
+                            type="radio"
+                            name="priceRange"
+                            value={range.value}
+                            checked={filters.priceRange === range.value}
+                            onChange={(e) => handleFilterChange('priceRange', e.target.value)}
+                            className="mr-3 accent-amazon-blue"
+                          />
+                          <span className="text-sm font-medium">{range.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

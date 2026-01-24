@@ -8,10 +8,8 @@ const WishlistPage = () => {
   const { wishlist, removeFromWishlist } = useWishlist();
   const { addToCart } = useCart();
 
-  const handleAddToCart = (product) => {
-    addToCart(product);
-    // Optionally remove from wishlist after adding to cart
-    // removeFromWishlist(product._id);
+  const handleAddToCart = async (product) => {
+    await addToCart(product);
   };
 
   return (

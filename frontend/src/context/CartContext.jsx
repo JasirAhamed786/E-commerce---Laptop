@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { useWishlist } from './WishlistContext';
 
 const CartContext = createContext();
 
@@ -12,6 +13,7 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
+  const { isInWishlist, removeFromWishlist } = useWishlist();
   const [cartItems, setCartItems] = useState([]);
 
   // Load cart from localStorage on mount
@@ -39,7 +41,7 @@ export const CartProvider = ({ children }) => {
     }
   }, [cartItems]);
 
-  const addToCart = (product) => {
+  const addToCart = async (product) => {
     const existingItem = cartItems.find(item => item._id === product._id);
     if (existingItem) {
       // If qty is specified in the product (from ProductDetails), use it directly
@@ -55,6 +57,11 @@ export const CartProvider = ({ children }) => {
       // If qty is not specified, default to 1
       const qty = product.qty || 1;
       setCartItems([...cartItems, { ...product, qty }]);
+
+      // Remove from wishlist if it's wishlisted (silently, no notification)
+      if (isInWishlist(product._id)) {
+        await removeFromWishlist(product._id, true);
+      }
       toast.success(`${product.name} added to cart!`);
     }
   };

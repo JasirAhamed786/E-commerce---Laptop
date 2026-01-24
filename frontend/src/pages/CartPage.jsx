@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Plus, Minus, Trash2, ArrowLeft, ShoppingBag } from 'lucide-react';
+import { ShoppingCart, Plus, Minus, Trash2, ArrowLeft, ShoppingBag, Heart, X } from 'lucide-react';
 
 const CartPage = () => {
   const { cartItems, removeFromCart, increaseQuantity, decreaseQuantity, totalPrice } = useCart();
+  const { addToWishlist } = useWishlist();
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
+  const [itemToRemove, setItemToRemove] = useState(null);
 
   const shippingCost = totalPrice > 499 ? 0 : 100;
   const taxAmount = totalPrice * 0.18;
@@ -121,7 +125,10 @@ const CartPage = () => {
                       </div>
                       {/* Remove Button */}
                       <button
-                        onClick={() => removeFromCart(item._id)}
+                        onClick={() => {
+                          setItemToRemove(item);
+                          setShowRemoveModal(true);
+                        }}
                         className="flex items-center text-red-600 hover:text-red-700 transition-colors"
                       >
                         <Trash2 className="w-4 h-4 mr-1" />
@@ -192,6 +199,71 @@ const CartPage = () => {
                 >
                   Continue Shopping
                 </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Remove Item Modal */}
+        {showRemoveModal && itemToRemove && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Remove Item</h3>
+                  <button
+                    onClick={() => {
+                      setShowRemoveModal(false);
+                      setItemToRemove(null);
+                    }}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                <div className="flex items-center space-x-4 mb-6">
+                  <img
+                    src={itemToRemove.image || '/placeholder.jpg'}
+                    alt={itemToRemove.name}
+                    className="w-16 h-16 object-cover rounded-lg"
+                  />
+                  <div>
+                    <h4 className="font-medium text-gray-900">{itemToRemove.name}</h4>
+                    <p className="text-sm text-gray-600">{itemToRemove.brand}</p>
+                    <p className="text-sm font-semibold text-amazon-orange">₹{itemToRemove.price.toLocaleString()}</p>
+                  </div>
+                </div>
+
+                <p className="text-gray-600 mb-6">
+                  What would you like to do with this item?
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button
+                    onClick={() => {
+                      addToWishlist(itemToRemove);
+                      removeFromCart(itemToRemove._id);
+                      setShowRemoveModal(false);
+                      setItemToRemove(null);
+                    }}
+                    className="flex-1 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Heart className="w-4 h-4" />
+                    Move to Wishlist
+                  </button>
+                  <button
+                    onClick={() => {
+                      removeFromCart(itemToRemove._id);
+                      setShowRemoveModal(false);
+                      setItemToRemove(null);
+                    }}
+                    className="flex-1 bg-gray-600 text-white py-3 px-4 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Remove Only
+                  </button>
+                </div>
               </div>
             </div>
           </div>
