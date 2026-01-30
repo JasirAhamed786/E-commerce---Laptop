@@ -1,11 +1,14 @@
-# TODO: Fix Wishlist and Cart Issues
+# TODO: Implement Cart Persistence Across Sessions
 
-## Issues to Fix
-1. When adding a wishlisted product to the cart from the wishlist page, it doesn't remove the item from the wishlist.
-2. No notification appears on the cart page when removing an item.
+## Backend Changes
+- [ ] Add cart array to userModel.js
+- [ ] Create backend/controllers/cartController.js with CRUD operations
+- [ ] Create backend/routes/cartRoutes.js for API endpoints
+- [ ] Update backend/server.js to include cart routes
 
-## Steps to Complete
-- [x] Analyze the current code in CartContext.jsx and CartPage.jsx
-- [x] Fix the addToCart function in CartContext.jsx to ensure wishlist removal
-- [x] Add toast notifications in CartPage.jsx for item removal
-- [x] Test the fixes
+## Frontend Changes
+- [ ] Modify frontend/src/context/CartContext.jsx to sync with backend when logged in
+- [ ] Remove cart clearing from logout in frontend/src/context/AuthContext.jsx
+
+## Testing
+- [ ] Test cart persistence across login/logout cycles

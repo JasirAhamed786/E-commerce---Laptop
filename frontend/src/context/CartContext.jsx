@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useWishlist } from './WishlistContext';
+import { useAuth } from './AuthContext';
 
 const CartContext = createContext();
 
@@ -14,6 +15,7 @@ export const useCart = () => {
 
 export const CartProvider = ({ children }) => {
   const { isInWishlist, removeFromWishlist } = useWishlist();
+  const { user } = useAuth();
   const [cartItems, setCartItems] = useState([]);
 
   // Load cart from localStorage on mount
@@ -30,6 +32,13 @@ export const CartProvider = ({ children }) => {
       }
     }
   }, []);
+
+  // Clear cart when user logs out
+  useEffect(() => {
+    if (!user) {
+      setCartItems([]);
+    }
+  }, [user]);
 
   // Save cart to localStorage whenever cartItems change
   useEffect(() => {
