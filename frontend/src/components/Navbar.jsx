@@ -122,6 +122,16 @@ const Navbar = () => {
                     </div>
                   </div>
                   <div className="py-2">
+                    {user.isAdmin && (
+                      <Link
+                        to="/admin"
+                        onClick={() => setIsDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        <User className="w-4 h-4" />
+                        Admin Panel
+                      </Link>
+                    )}
                     <Link
                       to="/profile"
                       onClick={() => setIsDropdownOpen(false)}

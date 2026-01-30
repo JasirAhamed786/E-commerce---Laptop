@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
@@ -32,6 +32,17 @@ import OrderList from './pages/admin/OrderList';
 import ProductList from './pages/admin/ProductList';
 import ProductEditScreen from './pages/admin/ProductEditScreen';
 import ScrollToTop from './components/ScrollToTop';
+
+function ConditionalChatbot() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
+  if (isAdminRoute) {
+    return null;
+  }
+
+  return <Chatbot />;
+}
 
 function App() {
   return (
@@ -71,7 +82,7 @@ function App() {
           <Route path="orders" element={<OrderList />} />
         </Route>
       </Routes>
-      <Chatbot />
+      <ConditionalChatbot />
     </div>
   );
 }

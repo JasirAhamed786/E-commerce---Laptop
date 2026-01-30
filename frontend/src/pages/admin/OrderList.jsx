@@ -14,14 +14,23 @@ const OrderList = () => {
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem('token');
+      console.log('Fetching orders with token:', token ? 'present' : 'missing');
       const response = await fetch('http://localhost:5000/api/orders/admin', {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log('Response status:', response.status);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API Error:', errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
       const data = await response.json();
+      console.log('Orders data:', data);
       setOrders(data);
       setFilteredOrders(data);
     } catch (error) {
-      toast.error('Failed to load orders');
+      console.error('Fetch orders error:', error);
+      toast.error('Failed to load orders: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -32,10 +41,12 @@ const OrderList = () => {
   }, []);
 
   useEffect(() => {
-    let filtered = orders.filter(order =>
-      order.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order._id.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    let filtered = orders.filter(order => {
+      const userName = order.user?.name || '';
+      const orderId = order._id || '';
+      return userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+             orderId.toLowerCase().includes(searchTerm.toLowerCase());
+    });
 
     if (statusFilter !== 'all') {
       filtered = filtered.filter(order => (order.status || 'Pending') === statusFilter);
@@ -230,46 +241,58 @@ const OrderList = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {currentOrders.map((order) => (
-                <tr key={order._id} className="hover:bg-gray-50 transition-colors duration-200">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    #{order._id.slice(-8)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                        <span className="text-xs font-medium text-gray-700">
-                          {order.user.name.charAt(0).toUpperCase()}
-                        </span>
+              {currentOrders.length > 0 ? (
+                currentOrders.map((order) => (
+                  <tr key={order._id} className="hover:bg-gray-50 transition-colors duration-200">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      #{order._id.slice(-8)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                          <span className="text-xs font-medium text-gray-700">
+                            {order.user?.name?.charAt(0)?.toUpperCase() || '?'}
+                          </span>
+                        </div>
+                        <div className="ml-3">
+                          <div className="text-sm font-medium text-gray-900">{order.user?.name || 'Unknown'}</div>
+                          <div className="text-sm text-gray-500">{order.user?.email || 'No email'}</div>
+                        </div>
                       </div>
-                      <div className="ml-3">
-                        <div className="text-sm font-medium text-gray-900">{order.user.name}</div>
-                        <div className="text-sm text-gray-500">{order.user.email}</div>
-                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {order.createdAt ? formatDate(order.createdAt) : 'N/A'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      ${order.totalPrice?.toFixed(2) || '0.00'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <select
+                        value={order.status || 'Pending'}
+                        onChange={(e) => updateOrderStatus(order._id, e.target.value)}
+                        className={`px-3 py-1 text-xs font-semibold rounded-full border-0 ${getStatusColor(order.status || 'Pending')}`}
+                      >
+                        <option value="Pending">Pending</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                      </select>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {order.orderItems?.length || 0} items
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="px-6 py-12 text-center text-gray-500">
+                    <div className="flex flex-col items-center">
+                      <Package className="h-12 w-12 text-gray-400 mb-4" />
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">No orders found</h3>
+                      <p className="text-gray-500">There are no orders to display at the moment.</p>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {formatDate(order.createdAt)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    ${order.totalPrice.toFixed(2)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <select
-                      value={order.status || 'Pending'}
-                      onChange={(e) => updateOrderStatus(order._id, e.target.value)}
-                      className={`px-3 py-1 text-xs font-semibold rounded-full border-0 ${getStatusColor(order.status || 'Pending')}`}
-                    >
-                      <option value="Pending">Pending</option>
-                      <option value="Shipped">Shipped</option>
-                      <option value="Delivered">Delivered</option>
-                    </select>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {order.orderItems?.length || 0} items
-                  </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

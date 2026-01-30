@@ -5,6 +5,8 @@ import { useAuth } from '../context/AuthContext';
 const AdminRoute = ({ children }) => {
   const { user } = useAuth();
 
+  console.log("AdminRoute User Check:", user);
+
   if (!user || !user.isAdmin) {
     return <Navigate to="/" replace />;
   }

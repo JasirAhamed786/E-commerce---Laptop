@@ -43,29 +43,50 @@ const upload = multer({
 });
 
 // Upload route
-router.post('/', protect, upload.single('profilePicture'), async (req, res) => {
+router.post('/', protect, upload.fields([{ name: 'profilePicture' }, { name: 'image' }]), async (req, res) => {
   console.log('Upload route called');
   console.log('Request headers:', req.headers);
   console.log('Request file:', req.file);
   console.log('Request body:', req.body);
 
   try {
-    if (!req.file) {
+    const files = req.files;
+    if (!files || (!files.profilePicture && !files.image)) {
       console.log('No file uploaded');
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
+    let file;
+    let fieldname;
+    if (files.profilePicture && files.profilePicture.length > 0) {
+      file = files.profilePicture[0];
+      fieldname = 'profilePicture';
+    } else if (files.image && files.image.length > 0) {
+      file = files.image[0];
+      fieldname = 'image';
+    } else {
+      return res.status(400).json({ message: 'No valid file uploaded' });
+    }
+
     // Return the file path that can be accessed from frontend
-    const filePath = `/uploads/${req.file.filename}`;
+    const filePath = `/uploads/${file.filename}`;
     console.log('File uploaded successfully:', filePath);
 
-    // Update user's profilePicture field
-    await User.findByIdAndUpdate(req.user._id, { profilePicture: filePath });
-
-    res.json({
-      message: 'File uploaded successfully',
-      filePath: filePath
-    });
+    // Check if it's a profile picture upload
+    if (fieldname === 'profilePicture') {
+      // Update user's profilePicture field
+      await User.findByIdAndUpdate(req.user._id, { profilePicture: filePath });
+      res.json({
+        message: 'Profile picture uploaded successfully',
+        filePath: filePath
+      });
+    } else {
+      // For other uploads like product images, just return the path
+      res.json({
+        message: 'File uploaded successfully',
+        image: filePath
+      });
+    }
   } catch (error) {
     console.error('Upload error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
