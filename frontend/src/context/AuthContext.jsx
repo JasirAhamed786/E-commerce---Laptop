@@ -74,6 +74,7 @@ export const AuthProvider = ({ children }) => {
           address: data.address,
           preferences: data.preferences,
           profilePicture: data.profilePicture,
+          isAdmin: data.isAdmin,
         };
         localStorage.setItem('user', JSON.stringify(userData));
         setUser(userData);

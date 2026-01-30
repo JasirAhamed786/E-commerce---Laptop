@@ -24,6 +24,13 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsOfServicePage from './pages/TermsOfServicePage';
 import CookiePolicyPage from './pages/CookiePolicyPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import UserList from './pages/admin/UserList';
+import OrderList from './pages/admin/OrderList';
+import ProductList from './pages/admin/ProductList';
+import ProductEditScreen from './pages/admin/ProductEditScreen';
 import ScrollToTop from './components/ScrollToTop';
 
 function App() {
@@ -54,6 +61,15 @@ function App() {
         <Route path="/terms-of-service" element={<TermsOfServicePage />} />
         <Route path="/cookie-policy" element={<CookiePolicyPage />} />
         <Route path="/shipping-info" element={<ShippingPage />} />
+        <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="users" element={<UserList />} />
+          <Route path="products" element={<ProductList />} />
+          <Route path="products/edit" element={<ProductEditScreen />} />
+          <Route path="products/edit/:id" element={<ProductEditScreen />} />
+          <Route path="orders" element={<OrderList />} />
+        </Route>
       </Routes>
       <Chatbot />
     </div>

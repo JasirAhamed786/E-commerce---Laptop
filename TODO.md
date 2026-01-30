@@ -1,33 +1,24 @@
-# Cart Persistence Fix
+# Admin Dashboard Implementation TODO
 
-## Problem
-When users log out and log back in, their cart items disappear because the cart was only stored in localStorage and cleared on logout.
+## Backend
+- [x] Create backend/controllers/userController.js with getUsers and deleteUser
+- [x] Add getAllOrders and updateOrderStatus to backend/controllers/orderController.js
+- [x] Create backend/routes/userRoutes.js with admin-protected routes
+- [x] Update backend/routes/orderRoutes.js with admin routes
+- [x] Check and update backend/server.js to include userRoutes
 
-## Solution Implemented
-- Added `cart` field to the User model in `backend/models/userModel.js`
-- Modified `frontend/src/context/AuthContext.jsx` to remove cart clearing on logout
-- Updated `frontend/src/context/CartContext.jsx` to:
-  - Load cart from backend when user logs in
-  - Sync cart changes to backend for logged-in users
-  - Maintain localStorage for guest users
-  - Merge guest cart with backend cart on login to preserve items added while logged out
+## Frontend
+- [x] Create frontend/src/components/AdminRoute.jsx
+- [x] Create frontend/src/pages/admin/AdminLayout.jsx
+- [x] Create frontend/src/pages/admin/AdminDashboard.jsx
+- [x] Create frontend/src/pages/admin/UserList.jsx
+- [x] Create frontend/src/pages/admin/OrderList.jsx
+- [x] Create frontend/src/pages/admin/ProductList.jsx
+- [x] Create frontend/src/pages/admin/ProductEditScreen.jsx
+- [x] Update frontend/src/App.jsx with admin routes
 
-## Changes Made
-- [x] Added cart schema to User model
-- [x] Removed cart clearing from AuthContext logout
-- [x] Added backend sync functionality to CartContext
-- [x] Added cart loading from backend on login
-- [x] Added guest cart merging with backend cart on login
-
-## Testing Required
-- Test adding items to cart as guest user
-- Test logging in and verifying cart persists
-- Test logging out and verifying cart notification disappears
-- Test logging out and logging back in
-- Test cart sync when modifying items while logged in
-- Test merging guest cart with backend cart on login
-
-## Follow-up Steps
-- Restart the backend server to apply model changes
-- Test the functionality thoroughly
-- Consider migrating existing user carts if any were stored elsewhere
+## Testing
+- [x] Enhanced all admin components with professional styling
+- [x] Added additional features: image upload, stats cards, search/filters, pagination
+- [ ] Test backend APIs
+- [ ] Run frontend and test admin functionality
