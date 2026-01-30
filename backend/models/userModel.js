@@ -52,6 +52,17 @@ const userSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Product',
     }],
+    cart: [{
+      product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+      },
+      qty: {
+        type: Number,
+        required: true,
+        default: 1,
+      },
+    }],
   },
   {
     timestamps: true,
