@@ -7,9 +7,24 @@ const SuccessPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Play success sound
-    const audio = new Audio('https://www.soundjay.com/buttons/sounds/button-3.mp3');
-    audio.play();
+    // 🔊 Play Online Success Sound
+    // Using a "Cash Register" / "Success" chime from a reliable CDN
+    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+    
+    audio.volume = 0.5; // Set volume to 50% so it's not too loud
+    
+    // Play sound but handle browser autoplay restrictions
+    const playPromise = audio.play();
+    
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          console.log("Audio played successfully");
+        })
+        .catch(error => {
+          console.log("Audio playback failed (usually due to browser autoplay policy):", error);
+        });
+    }
 
     // Show track order button after 3 seconds
     const timer = setTimeout(() => {
@@ -35,26 +50,26 @@ const SuccessPage = () => {
               </div>
               <span className="ml-2 text-sm font-medium text-gray-600">Cart</span>
             </div>
-            <div className="w-16 h-px bg-amazon-orange"></div>
+            <div className="w-16 h-px bg-orange-600"></div>
             <div className="flex items-center">
               <div className="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-semibold">
                 2
               </div>
               <span className="ml-2 text-sm font-medium text-gray-600">Shipping</span>
             </div>
-            <div className="w-16 h-px bg-amazon-orange"></div>
+            <div className="w-16 h-px bg-orange-600"></div>
             <div className="flex items-center">
               <div className="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-semibold">
                 3
               </div>
               <span className="ml-2 text-sm font-medium text-gray-600">Payment</span>
             </div>
-            <div className="w-16 h-px bg-amazon-orange"></div>
+            <div className="w-16 h-px bg-orange-600"></div>
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-amazon-orange text-white rounded-full flex items-center justify-center text-sm font-semibold">
+              <div className="w-8 h-8 bg-orange-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
                 4
               </div>
-              <span className="ml-2 text-sm font-medium text-amazon-orange">Confirmation</span>
+              <span className="ml-2 text-sm font-medium text-orange-600">Confirmation</span>
             </div>
           </div>
         </div>

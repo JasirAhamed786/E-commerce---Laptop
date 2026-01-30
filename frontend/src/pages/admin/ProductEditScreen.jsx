@@ -269,7 +269,7 @@ const ProductEditScreen = () => {
               {formData.image && (
                 <div className="relative mb-4">
                   <img
-                    src={`http://localhost:5000${formData.image}`}
+                    src={formData.image.startsWith('http') ? formData.image : `http://localhost:5000${formData.image}`}
                     alt="Product preview"
                     className="w-full h-48 object-cover rounded-lg border border-gray-200"
                   />
@@ -338,7 +338,7 @@ const ProductEditScreen = () => {
                   <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
                     {formData.image ? (
                       <img
-                        src={`http://localhost:5000${formData.image}`}
+                        src={formData.image.startsWith('http') ? formData.image : `http://localhost:5000${formData.image}`}
                         alt="Preview"
                         className="w-full h-full object-cover rounded-lg"
                       />

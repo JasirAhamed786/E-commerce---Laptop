@@ -221,9 +221,12 @@ const ProductList = () => {
                       <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
                         {product.image ? (
                           <img
-                            src={`http://localhost:5000${product.image}`}
+                            src={product.image.startsWith('http') ? product.image : `http://localhost:5000${product.image}`}
                             alt={product.name}
                             className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.target.src = 'https://via.placeholder.com/50';
+                            }}
                           />
                         ) : (
                           <Package className="h-6 w-6 text-gray-400" />
@@ -244,7 +247,7 @@ const ProductList = () => {
                     ${product.price.toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {product.countInStock}
+                    {product.countInStock || product.stock || 0}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${

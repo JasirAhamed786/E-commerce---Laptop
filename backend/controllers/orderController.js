@@ -1,4 +1,5 @@
 const Order = require('../models/orderModel');
+const { createOrderNotification } = require('./notificationController');
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -23,6 +24,9 @@ const addOrderItems = async (req, res) => {
       });
 
       const createdOrder = await order.save();
+
+      // Create notification for admins
+      await createOrderNotification(createdOrder._id);
 
       res.status(201).json(createdOrder);
     }
