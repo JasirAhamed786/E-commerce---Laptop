@@ -9,6 +9,10 @@ backend/node_modules/
 .env.development
 .env.production
 
+frontend/.env
+backend/.env
+
+
 # Uploads (user uploaded files)
 backend/uploads/
 

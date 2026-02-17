@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
@@ -32,23 +32,59 @@ import OrderList from './pages/admin/OrderList';
 import ProductList from './pages/admin/ProductList';
 import ProductEditScreen from './pages/admin/ProductEditScreen';
 import ScrollToTop from './components/ScrollToTop';
+import { useAuth } from './context/AuthContext';
 
 function ConditionalChatbot() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
-
-  if (isAdminRoute) {
-    return null;
-  }
-
+  if (isAdminRoute) return null;
   return <Chatbot />;
 }
 
 function App() {
+  const { user } = useAuth();
+
+  // ✅ Chatbase secure loader
+  useEffect(() => {
+  const chatbaseId = import.meta.env.VITE_CHATBASE_ID;
+
+  // 🔴 If no user → REMOVE chatbot
+  if (!user || user?.isAdmin) {
+    const existingScript = document.getElementById(chatbaseId);
+    if (existingScript) existingScript.remove();
+
+    const iframe = document.querySelector('iframe[src*="chatbase"]');
+    if (iframe) iframe.remove();
+
+    return;
+  }
+
+  // 🟢 Load chatbot for normal user
+  if (!chatbaseId) return;
+  if (document.getElementById(chatbaseId)) return;
+
+  window.chatbaseConfig = {
+    chatbotId: chatbaseId,
+    userId: user._id,
+    userEmail: user.email,
+    userName: user.name,
+  };
+
+  const script = document.createElement('script');
+  script.src = 'https://www.chatbase.co/embed.min.js';
+  script.id = chatbaseId;
+  script.domain = 'www.chatbase.co';
+  script.defer = true;
+
+  document.body.appendChild(script);
+}, [user]);
+
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       <ScrollToTop />
       <Navbar />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<ProtectedRoute><ShopPage /></ProtectedRoute>} />
@@ -72,6 +108,7 @@ function App() {
         <Route path="/terms-of-service" element={<TermsOfServicePage />} />
         <Route path="/cookie-policy" element={<CookiePolicyPage />} />
         <Route path="/shipping-info" element={<ShippingPage />} />
+
         <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
           <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
@@ -82,7 +119,11 @@ function App() {
           <Route path="orders" element={<OrderList />} />
         </Route>
       </Routes>
+
+      {/* Optional local chatbot UI */}
       {/* <ConditionalChatbot /> */}
+
+      <Toaster position="top-right" />
     </div>
   );
 }
