@@ -25,7 +25,7 @@ const AdminLayout = () => {
   const fetchNotifications = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/notifications/admin', {
+      const response = await fetch('/api/notifications/admin', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -39,7 +39,7 @@ const AdminLayout = () => {
   const markAsRead = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      await fetch(`http://localhost:5000/api/notifications/${id}/read`, {
+      await fetch(`/api/notifications/${id}/read`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -52,7 +52,7 @@ const AdminLayout = () => {
   const markAllAsRead = async () => {
     try {
       const token = localStorage.getItem('token');
-      await fetch('http://localhost:5000/api/notifications/read-all', {
+      await fetch('/api/notifications/read-all', {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` },
       });

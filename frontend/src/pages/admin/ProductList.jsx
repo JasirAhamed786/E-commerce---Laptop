@@ -14,7 +14,7 @@ const ProductList = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/products');
+      const response = await fetch('/api/products');
       const data = await response.json();
       setProducts(data);
       setFilteredProducts(data);
@@ -48,7 +48,7 @@ const ProductList = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const response = await fetch(`/api/products/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -221,7 +221,7 @@ const ProductList = () => {
                       <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
                         {product.image ? (
                           <img
-                            src={product.image.startsWith('http') ? product.image : `http://localhost:5000${product.image}`}
+                            src={product.image}
                             alt={product.name}
                             className="w-full h-full object-cover"
                             onError={(e) => {

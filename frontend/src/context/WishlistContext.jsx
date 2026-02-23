@@ -30,7 +30,7 @@ export const WishlistProvider = ({ children }) => {
   const fetchWishlist = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/wishlist', {
+      const response = await fetch('/api/wishlist', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -55,7 +55,7 @@ export const WishlistProvider = ({ children }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/wishlist', {
+      const response = await fetch('/api/wishlist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ export const WishlistProvider = ({ children }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/wishlist/${productId}`, {
+      const response = await fetch(`/api/wishlist/${productId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -127,7 +127,7 @@ export const WishlistProvider = ({ children }) => {
       // Remove all items one by one since no bulk delete
       const token = localStorage.getItem('token');
       for (const item of wishlist) {
-        await fetch(`http://localhost:5000/api/wishlist/${item._id}`, {
+        await fetch(`/api/wishlist/${item._id}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`,

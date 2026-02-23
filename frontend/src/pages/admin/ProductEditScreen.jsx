@@ -28,7 +28,7 @@ const ProductEditScreen = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${id}`);
+      const response = await fetch(`/api/products/${id}`);
       const data = await response.json();
       setFormData({
         name: data.name || '',
@@ -69,7 +69,7 @@ const ProductEditScreen = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/upload', {
+      const response = await fetch('/api/upload', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -108,7 +108,7 @@ const ProductEditScreen = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const url = isEdit ? `http://localhost:5000/api/products/${id}` : 'http://localhost:5000/api/products';
+      const url = isEdit ? `/api/products/${id}` : '/api/products';
       const method = isEdit ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -161,7 +161,7 @@ const ProductEditScreen = () => {
               {isEdit ? 'Edit Product' : 'Create New Product'}
             </h1>
             <p className="text-gray-600 mt-1">
-              {isEdit ? 'Update product information' : 'Add a new product to your inventory'}
+              {isEdit ? ' Update product information' : 'Add a new product to your inventory'}
             </p>
           </div>
         </div>
@@ -269,7 +269,7 @@ const ProductEditScreen = () => {
               {formData.image && (
                 <div className="relative mb-4">
                   <img
-                    src={formData.image.startsWith('http') ? formData.image : `http://localhost:5000${formData.image}`}
+                    src={formData.image}
                     alt="Product preview"
                     className="w-full h-48 object-cover rounded-lg border border-gray-200"
                   />
@@ -338,7 +338,7 @@ const ProductEditScreen = () => {
                   <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
                     {formData.image ? (
                       <img
-                        src={formData.image.startsWith('http') ? formData.image : `http://localhost:5000${formData.image}`}
+                        src={formData.image}
                         alt="Preview"
                         className="w-full h-full object-cover rounded-lg"
                       />
@@ -375,7 +375,7 @@ const ProductEditScreen = () => {
             className="px-6 py-3 text-sm font-medium text-white bg-orange-600 border border-transparent rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center"
           >
             <Save className="h-4 w-4 mr-2" />
-            {loading ? 'Saving...' : (isEdit ? 'Update Product' : 'Create Product')}
+            {loading ? 'Saving...' : (isEdit ? ' Update Product' : 'Create Product')}
           </button>
         </div>
       </form>

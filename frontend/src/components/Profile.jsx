@@ -200,7 +200,7 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/upload', {
+      const response = await fetch('/api/upload', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -249,7 +249,7 @@ const Profile = () => {
               <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-2xl font-bold overflow-hidden cursor-pointer" onClick={() => setShowModal(true)}>
                 {user.profilePicture ? (
                   <img
-                    src={`http://localhost:5000${user.profilePicture}`}
+                    src={user.profilePicture}
                     alt="Profile"
                     className="w-full h-full object-cover"
                   />
@@ -655,7 +655,7 @@ const Profile = () => {
             </button>
             {user.profilePicture ? (
               <img
-                src={`http://localhost:5000${user.profilePicture}`}
+                src={user.profilePicture}
                 alt="Profile"
                 className="max-w-full max-h-full object-contain"
                 onClick={(e) => e.stopPropagation()}

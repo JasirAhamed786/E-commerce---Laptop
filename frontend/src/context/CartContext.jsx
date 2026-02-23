@@ -88,7 +88,7 @@ export const CartProvider = ({ children }) => {
   const loadCartFromBackend = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/cart', {
+      const response = await fetch('/api/cart', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -118,7 +118,7 @@ export const CartProvider = ({ children }) => {
     if (!token) return;
     try {
       // Clear existing cart
-      await fetch('http://localhost:5000/api/cart', {
+      await fetch('/api/cart', {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -126,7 +126,7 @@ export const CartProvider = ({ children }) => {
       });
       // Add all items
       for (const item of items) {
-        await fetch('http://localhost:5000/api/cart', {
+        await fetch('/api/cart', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

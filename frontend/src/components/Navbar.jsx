@@ -92,7 +92,7 @@ const Navbar = () => {
               >
                 {user.profilePicture ? (
                   <img
-                    src={`http://localhost:5000${user.profilePicture}`}
+                    src={user.profilePicture}
                     alt="Profile"
                     className="w-8 h-8 rounded-full object-cover"
                   />
@@ -108,7 +108,7 @@ const Navbar = () => {
                     <div className="flex items-center gap-3">
                       {user.profilePicture ? (
                         <img
-                          src={`http://localhost:5000${user.profilePicture}`}
+                          src={user.profilePicture}
                           alt="Profile"
                           className="w-10 h-10 rounded-full object-cover"
                         />

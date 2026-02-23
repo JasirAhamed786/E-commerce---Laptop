@@ -15,7 +15,7 @@ const OrderList = () => {
     try {
       const token = localStorage.getItem('token');
       console.log('Fetching orders with token:', token ? 'present' : 'missing');
-      const response = await fetch('http://localhost:5000/api/orders/admin', {
+      const response = await fetch('/api/orders/admin', {
         headers: { Authorization: `Bearer ${token}` },
       });
       console.log('Response status:', response.status);
@@ -59,7 +59,7 @@ const OrderList = () => {
   const updateOrderStatus = async (id, status) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/orders/${id}/status`, {
+      const response = await fetch(`/api/orders/${id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

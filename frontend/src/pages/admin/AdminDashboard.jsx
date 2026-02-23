@@ -18,9 +18,9 @@ const AdminDashboard = () => {
         const headers = { Authorization: `Bearer ${token}` };
 
         const [ordersRes, usersRes, productsRes] = await Promise.all([
-          fetch('http://localhost:5000/api/orders/admin', { headers }),
-          fetch('http://localhost:5000/api/users', { headers }),
-          fetch('http://localhost:5000/api/products'),
+          fetch('/api/orders/admin', { headers }),
+          fetch('/api/users', { headers }),
+          fetch('/api/products'),
         ]);
 
         const orders = await ordersRes.json();
