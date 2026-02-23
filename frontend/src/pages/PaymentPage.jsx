@@ -224,6 +224,9 @@ const PaymentPage = () => {
         });
 
         if (response.ok) {
+          const data = await response.json();
+          // Store order ID in session storage for use in success page
+          sessionStorage.setItem('lastOrderId', data._id);
           clearCart();
           navigate('/success');
         } else {

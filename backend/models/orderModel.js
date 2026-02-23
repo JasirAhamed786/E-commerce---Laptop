@@ -18,6 +18,11 @@ const orderSchema = mongoose.Schema(
           required: true,
           ref: 'Product',
         },
+        isCancelled: { type: Boolean, default: false },
+        cancellationReason: { type: String, default: '' },
+        cancelledAt: { type: Date },
+        refundStatus: { type: String, enum: ['none', 'pending', 'processed', 'rejected'], default: 'none' },
+        refundAmount: { type: Number, default: 0 },
       },
     ],
     shippingAddress: {
@@ -42,6 +47,33 @@ const orderSchema = mongoose.Schema(
       type: String,
       required: true,
       default: 'Pending',
+      enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
+    },
+    cancellationReason: {
+      type: String,
+      default: '',
+    },
+    cancellationRequestedAt: {
+      type: Date,
+    },
+    isCancelled: {
+      type: Boolean,
+      default: false,
+    },
+    cancelledAt: {
+      type: Date,
+    },
+    refundStatus: {
+      type: String,
+      enum: ['none', 'pending', 'processed', 'rejected'],
+      default: 'none',
+    },
+    refundAmount: {
+      type: Number,
+      default: 0,
+    },
+    refundedAt: {
+      type: Date,
     },
   },
   {

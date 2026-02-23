@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const SuccessPage = () => {
   const [showTrackButton, setShowTrackButton] = useState(false);
+  const [lastOrderId, setLastOrderId] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
+    // Get the last order ID from session storage (set during payment)
+    const orderId = sessionStorage.getItem('lastOrderId');
+    if (orderId) {
+      setLastOrderId(orderId);
+    }
+    
     // 🔊 Play Online Success Sound
-    // Using a "Cash Register" / "Success" chime from a reliable CDN
     const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
     
-    audio.volume = 0.5; // Set volume to 50% so it's not too loud
+    audio.volume = 0.5;
     
-    // Play sound but handle browser autoplay restrictions
     const playPromise = audio.play();
     
     if (playPromise !== undefined) {
@@ -22,7 +28,7 @@ const SuccessPage = () => {
           console.log("Audio played successfully");
         })
         .catch(error => {
-          console.log("Audio playback failed (usually due to browser autoplay policy):", error);
+          console.log("Audio playback failed:", error);
         });
     }
 
@@ -34,8 +40,20 @@ const SuccessPage = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleTrackOrder = () => {
-    navigate('/orders');
+  const handleViewOrder = () => {
+    if (lastOrderId) {
+      navigate(`/orders/${lastOrderId}`);
+    } else {
+      navigate('/orders');
+    }
+  };
+
+  const handleCancelOrder = () => {
+    if (lastOrderId) {
+      navigate(`/orders/${lastOrderId}?cancel=true`);
+    } else {
+      navigate('/orders');
+    }
   };
 
   return (
@@ -95,14 +113,34 @@ const SuccessPage = () => {
               Thank you for your purchase. Your order has been confirmed.
             </p>
           </div>
-          <div>
+
+          {/* Action Buttons */}
+          <div className="space-y-3">
             {showTrackButton ? (
-              <button
-                onClick={handleTrackOrder}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
-              >
-                Track My Order
-              </button>
+              <>
+                <button
+                  onClick={handleViewOrder}
+                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                >
+                  View Order Details
+                </button>
+                
+                {lastOrderId && (
+                  <button
+                    onClick={handleCancelOrder}
+                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  >
+                    Cancel This Order
+                  </button>
+                )}
+
+                <Link
+                  to="/"
+                  className="group relative w-full flex justify-center py-2 px-4 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                >
+                  Continue Shopping
+                </Link>
+              </>
             ) : (
               <Link
                 to="/"
@@ -111,6 +149,11 @@ const SuccessPage = () => {
                 Continue Shopping
               </Link>
             )}
+          </div>
+
+          {/* Help Text */}
+          <div className="mt-4 text-sm text-gray-500">
+            <p>Need to cancel? You can do so from your order details within 24 hours of ordering.</p>
           </div>
         </div>
       </div>

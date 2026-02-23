@@ -36,6 +36,33 @@ const OrderHistoryPage = () => {
     );
   }
 
+  const getStatusColor = (status, isCancelled) => {
+    if (isCancelled) return 'bg-red-100 text-red-800';
+    switch (status) {
+      case 'Delivered':
+        return 'bg-green-100 text-green-800';
+      case 'Shipped':
+        return 'bg-blue-100 text-blue-800';
+      case 'Processing':
+        return 'bg-yellow-100 text-yellow-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getRefundBadge = (refundStatus) => {
+    switch (refundStatus) {
+      case 'processed':
+        return <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Refund Processed</span>;
+      case 'pending':
+        return <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">Refund Pending</span>;
+      case 'rejected':
+        return <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">Refund Rejected</span>;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header Section */}
@@ -77,7 +104,7 @@ const OrderHistoryPage = () => {
         ) : (
           <div className="space-y-6">
             {orders.map((order) => (
-              <div key={order._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+              <div key={order._id} className={`bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow ${order.isCancelled ? 'border-red-200' : ''}`}>
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div>
@@ -89,15 +116,20 @@ const OrderHistoryPage = () => {
                       })}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-gray-900">₹{order.totalPrice.toLocaleString('en-IN')}</p>
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                        order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
-                        order.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
-                        order.status === 'Processing' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
-                        {order.status}
-                      </span>
+                      <p className={`text-2xl font-bold ${order.isCancelled ? 'text-gray-400 line-through' : 'text-gray-900'}`}>
+                        ₹{order.totalPrice.toLocaleString('en-IN')}
+                      </p>
+                      {order.isCancelled && order.refundAmount > 0 && (
+                        <p className="text-lg font-bold text-green-600">
+                          Refund: ₹{order.refundAmount.toLocaleString('en-IN')}
+                        </p>
+                      )}
+                      <div className="mt-1">
+                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status, order.isCancelled)}`}>
+                          {order.isCancelled ? 'Cancelled' : order.status}
+                        </span>
+                        {getRefundBadge(order.refundStatus)}
+                      </div>
                     </div>
                   </div>
 
@@ -126,6 +158,11 @@ const OrderHistoryPage = () => {
                         <p className="text-sm font-medium text-gray-900">
                           {order.orderItems.length} item{order.orderItems.length > 1 ? 's' : ''}
                         </p>
+                        {order.cancellationReason && (
+                          <p className="text-xs text-gray-500 mt-1">
+                            Reason: {order.cancellationReason}
+                          </p>
+                        )}
                       </div>
                     </div>
 
