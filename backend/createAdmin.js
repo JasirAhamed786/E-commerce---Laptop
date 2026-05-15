@@ -8,7 +8,7 @@ connectDB();
 
 const createAdminUser = async () => {
   try {
-    const adminEmail = 'jasir@gmail.com';
+    const adminEmail = 'admin@gmail.com';
     const adminPassword = '111111';
     const adminName = 'JAS';
 
