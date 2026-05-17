@@ -11,8 +11,9 @@ const createAdminUser = async () => {
     const adminEmail = 'admin@gmail.com';
     const adminPassword = '111111';
     const adminName = 'JAS';
-
-    // Check if admin user already exists
+    
+    // Check if admin user already exist
+    
     const existingAdmin = await User.findOne({ email: adminEmail });
 
     if (existingAdmin) {
@@ -24,6 +25,7 @@ const createAdminUser = async () => {
     }
 
     // Create new admin user
+    
     const adminUser = new User({
       name: adminName,
       email: adminEmail,
