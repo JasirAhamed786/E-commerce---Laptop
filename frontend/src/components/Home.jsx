@@ -85,7 +85,7 @@ const Home = () => {
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2h-3v2h1a1 1 0 110 2H7a1 1 0 110-2h1v-2H4a2 2 0 01-2-2V5zm3 0v8h10V5H5z" clipRule="evenodd" />
                   </svg>
-                  Shop Laptops
+                  Shop Now
                 </Link>
                 <Link
                   to="/orders"
