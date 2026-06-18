@@ -14,6 +14,9 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // 1. THIS IS THE MAGIC FIX: Grab the Render URL from Vercel
+  const API_URL = import.meta.env.VITE_API_URL || '';
+
   useEffect(() => {
     // Check if user is logged in on app start
     const token = localStorage.getItem('token');
@@ -22,7 +25,8 @@ export const AuthProvider = ({ children }) => {
       // Immediately set user from localStorage
       setUser(JSON.parse(storedUser));
       // Verify token with backend in background
-      fetch('/api/auth/profile', {
+      // 2. UPDATED URL HERE
+      fetch(`${API_URL}/api/auth/profile`, { 
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -54,7 +58,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch('/api/auth/login', {
+      // 3. UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/auth/login`, { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,7 +94,8 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     try {
-      const response = await fetch('/api/auth/register', {
+      // 4. UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/auth/register`, { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +135,8 @@ export const AuthProvider = ({ children }) => {
   const updateUser = async (userData) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/auth/profile', {
+      // 5. UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/auth/profile`, { 
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

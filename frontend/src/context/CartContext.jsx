@@ -20,6 +20,9 @@ export const CartProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const previousUserRef = useRef();
 
+  // Grab the Render URL from Vercel
+  const API_URL = import.meta.env.VITE_API_URL || '';
+
   // Load cart from localStorage on mount (for guest users)
   useEffect(() => {
     if (!user) {
@@ -88,7 +91,8 @@ export const CartProvider = ({ children }) => {
   const loadCartFromBackend = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/cart', {
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/cart`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -118,7 +122,8 @@ export const CartProvider = ({ children }) => {
     if (!token) return;
     try {
       // Clear existing cart
-      await fetch('/api/cart', {
+      // UPDATED URL HERE
+      await fetch(`${API_URL}/api/cart`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -126,7 +131,8 @@ export const CartProvider = ({ children }) => {
       });
       // Add all items
       for (const item of items) {
-        await fetch('/api/cart', {
+        // UPDATED URL HERE
+        await fetch(`${API_URL}/api/cart`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

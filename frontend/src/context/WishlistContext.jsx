@@ -18,6 +18,9 @@ export const WishlistProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
 
+  // Grab the Render URL from Vercel
+  const API_URL = import.meta.env.VITE_API_URL || '';
+
   // Load wishlist from API when user logs in
   useEffect(() => {
     if (user) {
@@ -30,7 +33,8 @@ export const WishlistProvider = ({ children }) => {
   const fetchWishlist = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/wishlist', {
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/wishlist`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -55,7 +59,8 @@ export const WishlistProvider = ({ children }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/wishlist', {
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/wishlist`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,7 +93,8 @@ export const WishlistProvider = ({ children }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/wishlist/${productId}`, {
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/wishlist/${productId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -127,7 +133,8 @@ export const WishlistProvider = ({ children }) => {
       // Remove all items one by one since no bulk delete
       const token = localStorage.getItem('token');
       for (const item of wishlist) {
-        await fetch(`/api/wishlist/${item._id}`, {
+        // UPDATED URL HERE
+        await fetch(`${API_URL}/api/wishlist/${item._id}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`,
