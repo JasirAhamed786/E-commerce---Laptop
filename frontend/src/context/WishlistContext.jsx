@@ -19,7 +19,7 @@ export const WishlistProvider = ({ children }) => {
   const { user } = useAuth();
 
   // Grab the Render URL from Vercel
-  const API_URL = import.meta.env.VITE_API_URL || '';
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
 
   // Load wishlist from API when user logs in
   useEffect(() => {

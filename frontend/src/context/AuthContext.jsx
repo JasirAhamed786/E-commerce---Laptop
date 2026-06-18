@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   // 1. THIS IS THE MAGIC FIX: Grab the Render URL from Vercel
-  const API_URL = import.meta.env.VITE_API_URL || '';
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
 
   useEffect(() => {
     // Check if user is logged in on app start

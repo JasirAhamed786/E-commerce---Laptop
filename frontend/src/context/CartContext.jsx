@@ -21,7 +21,7 @@ export const CartProvider = ({ children }) => {
   const previousUserRef = useRef();
 
   // Grab the Render URL from Vercel
-  const API_URL = import.meta.env.VITE_API_URL || '';
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
 
   // Load cart from localStorage on mount (for guest users)
   useEffect(() => {
