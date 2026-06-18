@@ -16,7 +16,7 @@ const app = express();
 // Middleware
 // Configure CORS for production
 app.use(cors({
-    origin: 'https://dormdeals-seven.vercel.app/', // Temporarily allow all origins to ensure a smooth initial deployment
+    origin: 'https://dormdeals-seven.vercel.app', // Temporarily allow all origins to ensure a smooth initial deployment
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
 }));
