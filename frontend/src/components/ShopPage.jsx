@@ -31,6 +31,15 @@ const ShopPage = () => {
   // Grab the exact variable you set in Vercel
   const API_URL = import.meta.env.VITE_BACKEND_URL || '';
 
+  // Helper function to safely format image URLs
+  const getImageUrl = (path) => {
+    if (!path) return '';
+    if (path.startsWith('http')) return path; // If it's already an absolute URL, leave it alone
+    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    const imagePath = path.startsWith('/') ? path : `/${path}`;
+    return `${baseUrl}${imagePath}`;
+  };
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -41,10 +50,8 @@ const ShopPage = () => {
 
   const fetchProducts = async () => {
     try {
-      // UPDATED URL HERE
       const response = await fetch(`${API_URL}/api/products`);
       const data = await response.json();
-      // Debugging log to see if image links exist
       if (data.length > 0) console.log('First Product Image:', data[0].image); 
       setProducts(data);
       setLoading(false);
@@ -130,7 +137,7 @@ const ShopPage = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amazon-blue mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading products...</p>
         </div>
       </div>
@@ -152,7 +159,7 @@ const ShopPage = () => {
       <div className="bg-white border-b">
         <div className="max-w-screen-xl mx-auto px-4 py-3">
           <nav className="text-sm text-gray-600">
-            <Link to="/" className="hover:text-amazon-blue">Home</Link>
+            <Link to="/" className="hover:text-orange-600">Home</Link>
             <span className="mx-2">›</span>
             <span className="text-gray-900 font-medium">Shop</span>
             {filters.usage && (
@@ -167,6 +174,7 @@ const ShopPage = () => {
 
       <div className="max-w-screen-xl mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
+          
           {/* Filters Sidebar */}
           <div className={`lg:w-64 ${showFilters ? 'block' : 'hidden lg:block'}`}>
             <div className="bg-white rounded-lg shadow-sm sticky top-4 max-h-[calc(100vh-2rem)] overflow-hidden">
@@ -179,7 +187,7 @@ const ShopPage = () => {
                   </h3>
                   <button
                     onClick={clearFilters}
-                    className="text-sm text-amazon-blue hover:underline"
+                    className="text-sm text-orange-600 hover:underline"
                   >
                     Clear All
                   </button>
@@ -199,14 +207,10 @@ const ShopPage = () => {
                 <div className="mb-6">
                   <button
                     onClick={() => toggleSection('usage')}
-                    className="flex items-center justify-between w-full font-medium mb-3 hover:text-amazon-blue transition-colors"
+                    className="flex items-center justify-between w-full font-medium mb-3 hover:text-orange-600 transition-colors"
                   >
                     Usage Category
-                    {expandedSections.usage ? (
-                      <ChevronUp className="w-4 h-4" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4" />
-                    )}
+                    {expandedSections.usage ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
                   {expandedSections.usage && (
                     <div className="space-y-3 animate-in slide-in-from-top-2 duration-200">
@@ -218,7 +222,7 @@ const ShopPage = () => {
                             value={usage}
                             checked={filters.usage === usage}
                             onChange={(e) => handleFilterChange('usage', e.target.value)}
-                            className="mr-3 accent-amazon-blue"
+                            className="mr-3 accent-orange-600"
                           />
                           <span className="text-sm font-medium">{usage}</span>
                         </label>
@@ -231,14 +235,10 @@ const ShopPage = () => {
                 <div className="mb-6">
                   <button
                     onClick={() => toggleSection('ram')}
-                    className="flex items-center justify-between w-full font-medium mb-3 hover:text-amazon-blue transition-colors"
+                    className="flex items-center justify-between w-full font-medium mb-3 hover:text-orange-600 transition-colors"
                   >
                     RAM
-                    {expandedSections.ram ? (
-                      <ChevronUp className="w-4 h-4" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4" />
-                    )}
+                    {expandedSections.ram ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
                   {expandedSections.ram && (
                     <div className="space-y-3 animate-in slide-in-from-top-2 duration-200">
@@ -248,7 +248,7 @@ const ShopPage = () => {
                             type="checkbox"
                             checked={filters.ram === ram}
                             onChange={(e) => handleFilterChange('ram', filters.ram === ram ? '' : ram)}
-                            className="mr-3 accent-amazon-blue"
+                            className="mr-3 accent-orange-600"
                           />
                           <span className="text-sm font-medium">{ram}</span>
                         </label>
@@ -261,14 +261,10 @@ const ShopPage = () => {
                 <div className="mb-6">
                   <button
                     onClick={() => toggleSection('brand')}
-                    className="flex items-center justify-between w-full font-medium mb-3 hover:text-amazon-blue transition-colors"
+                    className="flex items-center justify-between w-full font-medium mb-3 hover:text-orange-600 transition-colors"
                   >
                     Brand
-                    {expandedSections.brand ? (
-                      <ChevronUp className="w-4 h-4" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4" />
-                    )}
+                    {expandedSections.brand ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
                   {expandedSections.brand && (
                     <div className="space-y-3 animate-in slide-in-from-top-2 duration-200">
@@ -278,7 +274,7 @@ const ShopPage = () => {
                             type="checkbox"
                             checked={filters.brand === brand}
                             onChange={(e) => handleFilterChange('brand', filters.brand === brand ? '' : brand)}
-                            className="mr-3 accent-amazon-blue"
+                            className="mr-3 accent-orange-600"
                           />
                           <span className="text-sm font-medium">{brand}</span>
                         </label>
@@ -291,14 +287,10 @@ const ShopPage = () => {
                 <div className="mb-6">
                   <button
                     onClick={() => toggleSection('price')}
-                    className="flex items-center justify-between w-full font-medium mb-3 hover:text-amazon-blue transition-colors"
+                    className="flex items-center justify-between w-full font-medium mb-3 hover:text-orange-600 transition-colors"
                   >
                     Price Range
-                    {expandedSections.price ? (
-                      <ChevronUp className="w-4 h-4" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4" />
-                    )}
+                    {expandedSections.price ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
                   {expandedSections.price && (
                     <div className="space-y-3 animate-in slide-in-from-top-2 duration-200">
@@ -310,7 +302,7 @@ const ShopPage = () => {
                             value={range.value}
                             checked={filters.priceRange === range.value}
                             onChange={(e) => handleFilterChange('priceRange', e.target.value)}
-                            className="mr-3 accent-amazon-blue"
+                            className="mr-3 accent-orange-600"
                           />
                           <span className="text-sm font-medium">{range.label}</span>
                         </label>
@@ -324,10 +316,11 @@ const ShopPage = () => {
 
           {/* Main Content */}
           <div className="flex-1">
-            {/* Header */}
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
+            
+            {/* Header (Fully Responsive Fixes Here) */}
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
+              <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
+                <div className="w-full xl:w-auto">
                   <h1 className="text-2xl font-bold text-gray-900">
                     {filters.usage ? `${filters.usage} Laptops` : 'All Laptops'}
                   </h1>
@@ -336,9 +329,10 @@ const ShopPage = () => {
                   </p>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 w-full xl:w-auto">
+                  
                   {/* Search */}
-                  <div className="relative">
+                  <div className="relative w-full sm:w-auto flex-grow sm:flex-grow-0">
                     <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                       <Search className="h-4 w-4 text-gray-400" />
                     </div>
@@ -347,47 +341,51 @@ const ShopPage = () => {
                       placeholder="Search products..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="border border-gray-300 rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-amazon-blue focus:border-transparent w-80"
+                      className="border border-gray-300 rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent w-full sm:w-60 md:w-72"
                     />
                   </div>
 
-                  {/* Sort */}
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amazon-blue"
-                  >
-                    <option value="relevance">Sort by: Relevance</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="rating">Customer Rating</option>
-                    <option value="newest">Newest First</option>
-                  </select>
+                  <div className="flex flex-wrap items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
+                    {/* Sort */}
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 flex-1 sm:flex-none"
+                    >
+                      <option value="relevance">Sort by: Relevance</option>
+                      <option value="price-low">Price: Low to High</option>
+                      <option value="price-high">Price: High to Low</option>
+                      <option value="rating">Customer Rating</option>
+                      <option value="newest">Newest First</option>
+                    </select>
 
-                  {/* View Mode */}
-                  <div className="flex border border-gray-300 rounded">
-                    <button
-                      onClick={() => setViewMode('grid')}
-                      className={`p-2 ${viewMode === 'grid' ? 'bg-amazon-blue text-white' : 'text-gray-600'}`}
-                    >
-                      <Grid className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setViewMode('list')}
-                      className={`p-2 ${viewMode === 'list' ? 'bg-amazon-blue text-white' : 'text-gray-600'}`}
-                    >
-                      <List className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                      {/* View Mode */}
+                      <div className="flex border border-gray-300 rounded">
+                        <button
+                          onClick={() => setViewMode('grid')}
+                          className={`p-2 transition-colors ${viewMode === 'grid' ? 'bg-orange-600 text-white' : 'text-gray-600 hover:bg-gray-50'}`}
+                        >
+                          <Grid className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => setViewMode('list')}
+                          className={`p-2 transition-colors ${viewMode === 'list' ? 'bg-orange-600 text-white' : 'text-gray-600 hover:bg-gray-50'}`}
+                        >
+                          <List className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      {/* Mobile Filter Toggle */}
+                      <button
+                        onClick={() => setShowFilters(!showFilters)}
+                        className="lg:hidden flex items-center px-3 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50"
+                      >
+                        <Filter className="w-4 h-4 mr-2" />
+                        Filters
+                      </button>
+                    </div>
                   </div>
-
-                  {/* Mobile Filter Toggle */}
-                  <button
-                    onClick={() => setShowFilters(!showFilters)}
-                    className="lg:hidden flex items-center px-3 py-2 border border-gray-300 rounded text-sm"
-                  >
-                    <Filter className="w-4 h-4 mr-2" />
-                    Filters
-                  </button>
                 </div>
               </div>
             </div>
@@ -401,22 +399,20 @@ const ShopPage = () => {
               {filteredProducts.map((product) => (
                 <div key={product._id} className="card bg-white p-4 hover:shadow-lg transition-shadow border border-gray-100 rounded-xl">
                   <Link to={`/product/${product._id}`}>
-                    {/* --- THE FIX IS HERE --- */}
                     <img
-                      src={product.image}
+                      src={getImageUrl(product.image)}
                       alt={product.name}
                       referrerPolicy="no-referrer"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = "https://via.placeholder.com/300?text=No+Image";
+                        e.target.src = "https://placehold.co/300x300/EEE/31343C?text=No+Image";
                       }}
                       className={`w-full object-cover rounded-lg mb-4 ${
-                        viewMode === 'grid' ? 'h-48' : 'h-32'
+                        viewMode === 'grid' ? 'h-48' : 'h-48 sm:h-32'
                       }`}
                     />
-                    {/* ----------------------- */}
 
-                    <div className={viewMode === 'list' ? 'flex gap-6' : ''}>
+                    <div className={viewMode === 'list' ? 'flex flex-col sm:flex-row gap-6' : ''}>
                       <div className="flex-1">
                         <h3 className="font-semibold text-lg mb-2 line-clamp-2">{product.name}</h3>
                         <p className="text-sm text-gray-600 mb-2">{product.brand}</p>
@@ -444,8 +440,8 @@ const ShopPage = () => {
                         </div>
 
                         {/* Price */}
-                        <p className="text-2xl font-bold text-amazon-orange mb-3">
-                          ₹{product.price.toLocaleString()}
+                        <p className="text-2xl font-bold text-orange-600 mb-3">
+                          ₹{product.price.toLocaleString('en-IN')}
                         </p>
 
                         {/* Key Specs */}
@@ -492,11 +488,11 @@ const ShopPage = () => {
 
             {/* No Products Found */}
             {filteredProducts.length === 0 && (
-              <div className="text-center py-12">
+              <div className="text-center py-12 bg-white rounded-lg border border-gray-100 mt-6">
                 <p className="text-gray-600 text-lg mb-4">No products found matching your criteria.</p>
                 <button
                   onClick={clearFilters}
-                  className="bg-amazon-blue text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity"
+                  className="bg-orange-600 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity"
                 >
                   Clear Filters
                 </button>
