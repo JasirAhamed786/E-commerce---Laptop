@@ -15,6 +15,18 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  // Grab the exact variable you set in Vercel
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
+
+  // Helper function to safely format image URLs
+  const getImageUrl = (path) => {
+    if (!path) return '';
+    if (path.startsWith('http')) return path; // If it's already an absolute URL, leave it alone
+    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    const imagePath = path.startsWith('/') ? path : `/${path}`;
+    return `${baseUrl}${imagePath}`;
+  };
+
   const handleLogout = () => {
     logout();
     setIsDropdownOpen(false);
@@ -58,8 +70,6 @@ const Navbar = () => {
           </div>
         </Link>
 
-
-
         {/* 3. Right Icons (Dark Grey with Orange Hover) */}
         <div className="flex items-center gap-4 font-medium text-sm text-slate-600">
 
@@ -92,7 +102,7 @@ const Navbar = () => {
               >
                 {user.profilePicture ? (
                   <img
-                    src={user.profilePicture}
+                    src={getImageUrl(user.profilePicture)}
                     alt="Profile"
                     className="w-8 h-8 rounded-full object-cover"
                   />
@@ -108,7 +118,7 @@ const Navbar = () => {
                     <div className="flex items-center gap-3">
                       {user.profilePicture ? (
                         <img
-                          src={user.profilePicture}
+                          src={getImageUrl(user.profilePicture)}
                           alt="Profile"
                           className="w-10 h-10 rounded-full object-cover"
                         />
