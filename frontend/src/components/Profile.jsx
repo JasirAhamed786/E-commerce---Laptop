@@ -14,6 +14,15 @@ const Profile = () => {
   // Grab the exact variable you set in Vercel
   const API_URL = import.meta.env.VITE_BACKEND_URL || '';
 
+  // Helper function to safely format image URLs
+  const getImageUrl = (path) => {
+    if (!path) return '';
+    if (path.startsWith('http')) return path; // If it's already an absolute URL (like Google/GitHub auth), leave it alone
+    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    const imagePath = path.startsWith('/') ? path : `/${path}`;
+    return `${baseUrl}${imagePath}`;
+  };
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -76,7 +85,6 @@ const Profile = () => {
   };
 
   const validateForm = () => {
-    // Email validation
     if (!formData.email.trim()) {
       setMessage('Email is required');
       return false;
@@ -87,7 +95,6 @@ const Profile = () => {
       return false;
     }
 
-    // Name validation
     if (!formData.name.trim()) {
       setMessage('Full name is required');
       return false;
@@ -97,7 +104,6 @@ const Profile = () => {
       return false;
     }
 
-    // Phone validation (if provided)
     if (formData.phone.trim()) {
       const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
       if (!phoneRegex.test(formData.phone.replace(/[\s\-\(\)]/g, ''))) {
@@ -106,7 +112,6 @@ const Profile = () => {
       }
     }
 
-    // Date of birth validation (if provided)
     if (formData.dateOfBirth) {
       const today = new Date();
       const birthDate = new Date(formData.dateOfBirth);
@@ -142,7 +147,6 @@ const Profile = () => {
     }
 
     try {
-      // Clean the formData to send empty strings for optional fields to allow clearing
       const cleanedData = {
         ...formData,
         phone: formData.phone.trim(),
@@ -161,7 +165,6 @@ const Profile = () => {
       if (result.success) {
         setMessage('Profile updated successfully!');
         setIsEditing(false);
-        // Update formData with the cleaned data to reflect changes immediately
         setFormData({
           name: cleanedData.name || '',
           email: cleanedData.email || '',
@@ -199,23 +202,21 @@ const Profile = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const formData = new FormData();
-    formData.append('profilePicture', file);
+    const formDataUpload = new FormData();
+    formDataUpload.append('profilePicture', file);
 
     try {
       const token = localStorage.getItem('token');
-      // UPDATED URL HERE
       const response = await fetch(`${API_URL}/api/upload`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        body: formData,
+        body: formDataUpload,
       });
 
       const data = await response.json();
       if (response.ok) {
-        // Update user context with new profile picture
         const updatedUser = { ...user, profilePicture: data.filePath };
         setUser(updatedUser);
         localStorage.setItem('user', JSON.stringify(updatedUser));
@@ -254,7 +255,7 @@ const Profile = () => {
               <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-2xl font-bold overflow-hidden cursor-pointer" onClick={() => setShowModal(true)}>
                 {user.profilePicture ? (
                   <img
-                    src={user.profilePicture}
+                    src={getImageUrl(user.profilePicture)}
                     alt="Profile"
                     className="w-full h-full object-cover"
                   />
@@ -660,7 +661,7 @@ const Profile = () => {
             </button>
             {user.profilePicture ? (
               <img
-                src={user.profilePicture}
+                src={getImageUrl(user.profilePicture)}
                 alt="Profile"
                 className="max-w-full max-h-full object-contain"
                 onClick={(e) => e.stopPropagation()}
