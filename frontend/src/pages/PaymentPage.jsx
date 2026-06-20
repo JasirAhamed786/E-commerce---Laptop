@@ -4,6 +4,9 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
 const PaymentPage = () => {
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
+
+  
   const [paymentMethod, setPaymentMethod] = useState('upi');
   const [bank, setBank] = useState('');
   const [upiId, setUpiId] = useState('');
@@ -209,7 +212,8 @@ const PaymentPage = () => {
           product: item._id,
         }));
 
-        const response = await fetch('/api/orders', {
+        // ✅ FIXED: Added "const response =" right here!
+        const response = await fetch(`${API_URL}/api/orders`, { 
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

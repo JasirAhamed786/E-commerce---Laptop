@@ -11,10 +11,14 @@ const UserList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
 
+  // Grab the exact variable you set in Vercel
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
+
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/users', {
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/users`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -50,7 +54,8 @@ const UserList = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/users/${id}`, {
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/users/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });

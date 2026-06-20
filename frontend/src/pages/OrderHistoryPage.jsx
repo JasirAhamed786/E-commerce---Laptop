@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const OrderHistoryPage = () => {
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
+  
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('/api/orders/myorders', {
+        const response = await fetch(`${API_URL}/api/orders/myorders`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },

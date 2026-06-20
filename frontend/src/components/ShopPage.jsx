@@ -28,6 +28,9 @@ const ShopPage = () => {
     price: true
   });
 
+  // Grab the exact variable you set in Vercel
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -38,7 +41,8 @@ const ShopPage = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('/api/products');
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/products`);
       const data = await response.json();
       // Debugging log to see if image links exist
       if (data.length > 0) console.log('First Product Image:', data[0].image); 

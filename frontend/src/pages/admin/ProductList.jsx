@@ -12,9 +12,13 @@ const ProductList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 10;
 
+  // Grab the exact variable you set in Vercel
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
+
   const fetchProducts = async () => {
     try {
-      const response = await fetch('/api/products');
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/products`);
       const data = await response.json();
       setProducts(data);
       setFilteredProducts(data);
@@ -48,7 +52,8 @@ const ProductList = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/products/${id}`, {
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/products/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -110,7 +115,7 @@ const ProductList = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-xl">
           <div className="flex items-center">
-            <div className="p-3 bg-blue-500 rounded-lg">
+            <div className="p-3 bg-blue-50 rounded-lg">
               <Package className="h-6 w-6 text-white" />
             </div>
             <div className="ml-4">

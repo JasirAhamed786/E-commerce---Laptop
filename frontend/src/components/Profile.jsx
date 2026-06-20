@@ -10,6 +10,10 @@ const Profile = () => {
   const [message, setMessage] = useState('');
   const [showModal, setShowModal] = useState(false);
   const fileInputRef = useRef(null);
+  
+  // Grab the exact variable you set in Vercel
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -200,7 +204,8 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/upload', {
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/upload`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

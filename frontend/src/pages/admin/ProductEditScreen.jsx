@@ -20,6 +20,9 @@ const ProductEditScreen = () => {
 
   const isEdit = !!id;
 
+  // Grab the exact variable you set in Vercel
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
+
   useEffect(() => {
     if (isEdit) {
       fetchProduct();
@@ -28,7 +31,8 @@ const ProductEditScreen = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await fetch(`/api/products/${id}`);
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/products/${id}`);
       const data = await response.json();
       setFormData({
         name: data.name || '',
@@ -69,7 +73,8 @@ const ProductEditScreen = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/upload', {
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/upload`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -108,7 +113,8 @@ const ProductEditScreen = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const url = isEdit ? `/api/products/${id}` : '/api/products';
+      // UPDATED URLs HERE
+      const url = isEdit ? `${API_URL}/api/products/${id}` : `${API_URL}/api/products`;
       const method = isEdit ? 'PUT' : 'POST';
 
       const response = await fetch(url, {

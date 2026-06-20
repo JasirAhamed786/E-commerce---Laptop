@@ -31,8 +31,10 @@ import UserList from './pages/admin/UserList';
 import OrderList from './pages/admin/OrderList';
 import ProductList from './pages/admin/ProductList';
 import ProductEditScreen from './pages/admin/ProductEditScreen';
+import ContactList from './pages/admin/ContactList';
 import ScrollToTop from './components/ScrollToTop';
 import { useAuth } from './context/AuthContext';
+
 
 function ConditionalChatbot() {
   const location = useLocation();
@@ -117,6 +119,7 @@ function App() {
           <Route path="products/edit" element={<ProductEditScreen />} />
           <Route path="products/edit/:id" element={<ProductEditScreen />} />
           <Route path="orders" element={<OrderList />} />
+          <Route path="contacts" element={<ContactList />} />
         </Route>
       </Routes>
 

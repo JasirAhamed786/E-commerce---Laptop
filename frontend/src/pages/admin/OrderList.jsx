@@ -18,10 +18,14 @@ const OrderList = () => {
   const [expandedOrders, setExpandedOrders] = useState([]);
   const ordersPerPage = 10;
 
+  // Grab the exact variable you set in Vercel
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
+
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/orders/admin', {
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/orders/admin`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) {
@@ -66,7 +70,8 @@ const OrderList = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/orders/${selectedOrder._id}/refund`, {
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/orders/${selectedOrder._id}/refund`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +102,8 @@ const OrderList = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/orders/${selectedOrder._id}/item/${selectedItem._id}/refund`, {
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/orders/${selectedOrder._id}/item/${selectedItem._id}/refund`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -144,7 +150,8 @@ const OrderList = () => {
   const updateOrderStatus = async (id, status) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/orders/${id}/status`, {
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/orders/${id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -11,16 +11,20 @@ const AdminDashboard = () => {
   const [recentOrders, setRecentOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Grab the exact variable you set in Vercel
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
+
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem('token');
         const headers = { Authorization: `Bearer ${token}` };
 
+        // UPDATED URLs HERE
         const [ordersRes, usersRes, productsRes] = await Promise.all([
-          fetch('/api/orders/admin', { headers }),
-          fetch('/api/users', { headers }),
-          fetch('/api/products'),
+          fetch(`${API_URL}/api/orders/admin`, { headers }),
+          fetch(`${API_URL}/api/users`, { headers }),
+          fetch(`${API_URL}/api/products`),
         ]);
 
         const orders = await ordersRes.json();

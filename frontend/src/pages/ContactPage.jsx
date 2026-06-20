@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
 const ContactPage = () => {
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,12 +25,26 @@ const ContactPage = () => {
     setIsSubmitting(true);
     setSubmitMessage('');
 
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+const res = await fetch(`${API_URL}/api/contacts`, { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message || 'Failed to send message');
+      }
+
       setSubmitMessage('Thank you for your message! We\'ll get back to you within 24 hours.');
       setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (err) {
+      setSubmitMessage(err.message || 'Something went wrong. Please try again.');
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (

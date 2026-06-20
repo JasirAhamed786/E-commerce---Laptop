@@ -15,17 +15,22 @@ const AdminLayout = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [darkMode, setDarkMode] = useState(false);
 
+  // Grab the exact variable you set in Vercel
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
+
   const menuItems = [
     { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { path: '/admin/users', label: 'Users', icon: Users },
     { path: '/admin/products', label: 'Products', icon: Package },
     { path: '/admin/orders', label: 'Orders', icon: ShoppingCart },
+    { path: '/admin/contacts', label: 'Contacts', icon: Bell },
   ];
 
   const fetchNotifications = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/notifications/admin', {
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/notifications/admin`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -39,7 +44,8 @@ const AdminLayout = () => {
   const markAsRead = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      await fetch(`/api/notifications/${id}/read`, {
+      // UPDATED URL HERE
+      await fetch(`${API_URL}/api/notifications/${id}/read`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -52,7 +58,8 @@ const AdminLayout = () => {
   const markAllAsRead = async () => {
     try {
       const token = localStorage.getItem('token');
-      await fetch('/api/notifications/read-all', {
+      // UPDATED URL HERE
+      await fetch(`${API_URL}/api/notifications/read-all`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` },
       });

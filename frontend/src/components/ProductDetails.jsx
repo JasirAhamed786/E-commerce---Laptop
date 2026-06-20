@@ -26,6 +26,9 @@ const ProductDetails = () => {
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
   const [submittingReview, setSubmittingReview] = useState(false);
 
+  // Grab the exact variable you set in Vercel
+  const API_URL = import.meta.env.VITE_BACKEND_URL || '';
+
   useEffect(() => {
     fetchProduct();
     fetchReviews();
@@ -40,7 +43,8 @@ const ProductDetails = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await fetch(`/api/products/${id}`);
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/products/${id}`);
       if (!response.ok) {
         throw new Error('Product not found');
       }
@@ -56,9 +60,10 @@ const ProductDetails = () => {
   const fetchReviews = async () => {
     try {
       setReviewsLoading(true);
+      // UPDATED URLs HERE
       const [reviewsRes, ratingRes] = await Promise.all([
-        fetch(`/api/products/${id}/reviews`),
-        fetch(`/api/products/${id}/reviews/average`)
+        fetch(`${API_URL}/api/products/${id}/reviews`),
+        fetch(`${API_URL}/api/products/${id}/reviews/average`)
       ]);
       
       const reviewsData = await reviewsRes.json();
@@ -87,7 +92,8 @@ const ProductDetails = () => {
 
     setSubmittingReview(true);
     try {
-      const response = await fetch(`/api/products/${id}/reviews`, {
+      // UPDATED URL HERE
+      const response = await fetch(`${API_URL}/api/products/${id}/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
